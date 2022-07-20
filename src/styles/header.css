@@ -1,0 +1,73 @@
+#status{
+    width: 100%;
+    font-size: 0.75rem;
+    padding: var(--padding-sm);
+    color: var(--text-clr);
+    background-color: #4c4c4c;
+}
+
+.branding{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    padding-bottom: 5px;
+    background-color: var(--brand-color-1);
+    width: 100%;
+}
+
+.branding .more{
+    transform: rotate(90deg);
+}
+
+.search svg{
+    cursor: pointer;
+}
+
+.brand-name{
+    font-size: 0.98rem;
+    font-weight: 400;
+    color: white;
+}
+
+.branding-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.menu{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    font-size: var(--fs);
+    color: var(--text-clr);
+    background-color: var(--brand-color-1);
+}
+
+.menu-item{
+    width: 100%;
+    pointer-events: none;
+    font-weight: 450;
+}
+
+.menu-item div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: pointer;
+    pointer-events: all;
+    font-size: 0.72rem;
+}
+
+a{
+    -webkit-user-drag: none;
+}
+
+.menu-item[active="true"]{
+    border-bottom: 2px solid white;
+    box-shadow: 0px 5px 5px -4px gray;
+}

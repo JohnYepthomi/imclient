@@ -1,0 +1,35 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+:root{
+  --fs: 0.88rem;
+  --fw: normal;
+
+  --padding-sm: 0.3rem;
+  --padding-md: 1rem;
+  --padding-lg: 1.5rem;
+
+  --brand-color-1: #008069;
+
+  --text-clr: white;
+
+  --border-sm: 1px;
+  --border-md: 2px;
+  --border-lg: 3px;
+  --border-clr: #ccc;
+
+  --font-primary: 'ubuntu', sans-serif;
+}
+
+body{
+  font-family: var(--font-primary);
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}
