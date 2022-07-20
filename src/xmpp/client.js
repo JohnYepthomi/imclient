@@ -16,7 +16,7 @@ class XmppClient{
             this.xmpp = client({
                 service: 'ws://ejimserver.herokuapp.com/',
                 // service: 'ws://localhost:4200/',
-                //domain: 'localhost',
+                domain: 'localhost',
                 username: credentials.username,
                 password: credentials.password,
                 // resource: "personal"
