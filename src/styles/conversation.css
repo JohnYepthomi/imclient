@@ -99,18 +99,6 @@
     min-height: calc(100vh - 35px);
 }
 
-.self{
-    position: relative;
-    align-self: flex-end;
-    width: fit-content;
-    min-width: 100px;
-    max-width: 300px;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: lightcoral;
-}
-
 .from{
     position: relative;
     width: fit-content;
@@ -122,17 +110,17 @@
     background-color: gray;
 }
 
-.self::after{
-  position: absolute;
-  content: "";
-  width: 0px;
-  height: 0px;
-  border-top: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-bottom: 12px solid lightcoral;
-  border-left: 12px solid transparent;
-  bottom: 0;
-  right: -10px;
+.from .stamp-ticks-container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.from .stamp-ticks-container .stamp{
+    color: white;
+    font-size: 0.55rem;
 }
 
 .from::after{
@@ -148,17 +136,43 @@
   left: -10px;
 }
 
-.from .stamp{
-    margin-top: 5px;
+/* SELF  */
+
+.self{
+    position: relative;
+    align-self: flex-end;
+    width: fit-content;
+    min-width: 100px;
+    max-width: 300px;
     color: white;
-    text-align: right;
-    font-size: 0.55rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: lightcoral;
 }
 
-.self .stamp{
+.self::after{
+  position: absolute;
+  content: "";
+  width: 0px;
+  height: 0px;
+  border-top: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid lightcoral;
+  border-left: 12px solid transparent;
+  bottom: 0;
+  right: -10px;
+}
+
+.self .stamp-ticks-container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
     margin-top: 5px;
+}
+
+.self .stamp-ticks-container .stamp{
     color: lightyellow;
-    text-align: right;
     font-size: 0.55rem;
 }
 
@@ -172,3 +186,4 @@
     color: gray;
     align-self: center;
 }
+
