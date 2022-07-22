@@ -76,7 +76,6 @@ export default function MessagesList() {
                       {newMessage.length > 0 
                         && newMessage.map((message, index)=>{
                           if(message[msg.jid]){
-                            debugger;
                             return (
                               <div className='message-peek-container'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="limegreen" class="bi bi-chat-fill" viewBox="0 0 16 16">

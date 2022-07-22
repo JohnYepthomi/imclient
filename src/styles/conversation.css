@@ -22,35 +22,22 @@
     background: #FF0000;
 }
 
- .message-view-container {
-    display: flex;
-    flex-direction: column-reverse;
-    position: relative;
-    width: 100%;
-    /*height: calc(100vh - 75px);*/
-    padding-left: var(--padding-md);
-    padding-right: var(--padding-md);
-    padding-top: 40px;
-    background-color: rgb(226, 219, 219);
-    /*margin-bottom: 10px;*/
-    /*overflow-y: scroll;*/
-}
-
 .message-header{
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 35px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: var(--padding-md);
-    background-color: var(--brand-color-1);
+    background-color: #2f2330;
     z-index: 1;
 }
 
-.more{
+.back-button, .more{
+    padding: 10px;
     cursor: pointer;
 }
 
@@ -59,59 +46,6 @@
     color: white;
     font-weight: bold;
     text-transform: capitalize;
-}
-
-.from{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
-    max-width: 250px;
-    min-width: 100px;
-    width: fit-content;
-    background-color: white;
-    line-height: 1.178;
-    padding: var(--padding-sm);
-    border-radius: 7px;
-    margin-bottom: 7px;
-    box-shadow: 0px 1.05px 2px 0.1px rgba(135, 132, 132, 0.75);
-}
-
-.message-timestamp{
-    font-size: 0.65rem;
-    color: gray;
-    align-self: flex-end;
-}
-
-.from-username{
-    font-size: 0.65rem;
-    color: gray;
-}
-
-
-.message-body{
-    font-size: 0.75rem;
-    padding: 5px;
-    padding-bottom: 0px;
-}
-
-.self{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 100%;
-    margin-bottom: 7px;
-}
-
-.self .message-body{
-    width: fit-content;
-    background-color: rgb(232, 251, 169);
-    max-width: 250px;
-    line-height: 1.178;
-    font-size: 0.75rem;
-    padding: 8px;
-    border-radius: 7px;
-    box-shadow: 0px 1.05px 2px 0.1px rgba(135, 132, 132, 0.75);
 }
 
 .message-input-container{
@@ -123,49 +57,118 @@
     justify-content: center;
     gap: 5px;
     padding: var(--padding-sm);
-    border-radius: 5px;
-    background-color: rgb(226, 219, 219);
+    background-color: #f9f8e9;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .message-input{
     width: 100%;
-    height: 30px;
+    height: 40px;
     border-radius: 7px;
     border: none;
+    font-size: 1rem;
     padding: var(--padding-sm);
     outline: none;
-    box-shadow: 0px 1px 2px 0.1px rgba(116, 114, 114, 0.75);
+    box-shadow: 0px 1px 5px 0.1px rgba(116, 114, 114, 0.75);
 }
 
 .message-send-button{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    background-color: var(--brand-color-1);
+    background-color: #d19337;
     box-shadow: 0px 1px 2px 0.1px rgba(116, 114, 114, 0.75);
     cursor: pointer;
     user-select: none;
 }
 
-.back-button{
-    cursor: pointer;
+.message-view-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    background-color: #f9f8e9;
+    gap: 10px;
+    font-size: 0.85rem;
+    padding: 17px;
+    margin-top: 40px;
+    min-height: calc(100vh - 35px);
+}
+
+.self{
+    position: relative;
+    align-self: flex-end;
+    width: fit-content;
+    min-width: 100px;
+    max-width: 300px;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: lightcoral;
+}
+
+.from{
+    position: relative;
+    width: fit-content;
+    min-width: 100px;
+    max-width: 300px;
+    padding: 5px 10px;
+    color: white;
+    border-radius:  0 5px 5px 5px;
+    background-color: gray;
+}
+
+.self::after{
+  position: absolute;
+  content: "";
+  width: 0px;
+  height: 0px;
+  border-top: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid lightcoral;
+  border-left: 12px solid transparent;
+  bottom: 0;
+  right: -10px;
+}
+
+.from::after{
+  position: absolute;
+  content: "";
+  width: 0px;
+  height: 0px;
+  border-top: 12px solid gray;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid transparent;
+  top: 0;
+  left: -10px;
+}
+
+.from .stamp{
+    margin-top: 5px;
+    color: white;
+    text-align: right;
+    font-size: 0.55rem;
+}
+
+.self .stamp{
+    margin-top: 5px;
+    color: lightyellow;
+    text-align: right;
+    font-size: 0.55rem;
 }
 
 .date-bookmark{
-    position: -webkit-sticky;
-    position: sticky;
-    top: 50px; 
-    font-size: 0.65rem;
-    width: 130px;
-    margin: 7px;
-    padding: 5px;
+    font-size: 0.75rem;
     text-align: center;
-    align-self: center;
     border-radius: 15px;
-    box-shadow: 1px 0.5px 2px 0px grey;
-    background-color: #f4dffb;
+    width: 100px;
+    padding: 5px;
+    background-color: lightgray;
+    color: gray;
+    align-self: center;
 }
-    

@@ -28,7 +28,7 @@ class XmppClient{
             });
             
             this.xmpp.on("offline", () => {
-                console.log('You are currently offline...');
+                console.log('You are currently offline...');    
             });
             
             this.xmpp.on("status", (status) => {
@@ -43,10 +43,10 @@ class XmppClient{
             this.xmpp.on("online", async (address) => {
                 await this.send(xml("presence"));
                 localStorage.setItem('loggedOut', false);
+                res(true);
             });
 
             this.xmpp.start().catch(console.error);
-            res(true);
         });
     }
 
@@ -151,10 +151,9 @@ class XmppClient{
     }
 
     // Creates a Room and Signals Support for Multi-User Chat
-    static async createInstantRoom (roomname){
-        let iq_join_muc = new xml.Element('presence', {to:`friendsgroup@conference.localhost/peteParker`, id:'create-instant-muc'});
+    static async createInstantRoom (roomname, nickname){
+        let iq_join_muc = new xml.Element('presence', {to: `${roomname}@conference.localhost/${nickname}`, id:'create-instant-muc'});
          iq_join_muc.c('x', {xmlns: "http://jabber.org/protocol/muc"});
-        
         await this.send(iq_join_muc);
     }
 
