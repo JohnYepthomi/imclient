@@ -18,6 +18,7 @@ class MessageSendQueue {
   }
 
   static tryAgain() {
+    logMessageQueue("retrying send message");
     setTimeout(async () => {
       await this.send();
     }, 2500);
@@ -41,6 +42,8 @@ class MessageSendQueue {
       this.tryAgain();
       return;
     }
+
+    logMessageQueue("XmppClient.status: ", XmppClient.status);
 
     this.isFree = false;
 
