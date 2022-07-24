@@ -55,15 +55,19 @@ class XmppClient {
 
   static async silentRestart() {
     let closingPromise = new Promise((res) => {
-      console.log("wait for closed state : promise created...");
-      let count = 0;
-      let intervalId = setInterval(() => {
-        if (this.xmpp.socket.socket.readyState === 3) {
-          clearInterval(intervalId);
-          res();
-        }
-        count++;
-      }, 300);
+      if (this.xmpp.socket) {
+        console.log("wait for closed state : promise created...");
+        let count = 0;
+        let intervalId = setInterval(() => {
+          if (this.xmpp.socket.socket.readyState === 3) {
+            clearInterval(intervalId);
+            res();
+          }
+          count++;
+        }, 300);
+      } else {
+        res();
+      }
     });
 
     closingPromise.then(async () => {
