@@ -177,7 +177,7 @@
 .queue-logger {
   position: sticky;
   top: 80px;
-  background-color: #d187185b;
+  background-color: #d18718;
   z-index: 999999;
   padding: 5px;
   font-size: 0.65rem;
@@ -187,7 +187,7 @@
 .client-logger {
   position: sticky;
   top: 150px;
-  background-color: rgba(34, 218, 28, 0.438);
+  background-color: rgb(34, 218, 28);
   z-index: 999999;
   padding: 5px;
   font-size: 0.65rem;

@@ -39,12 +39,10 @@ class MessageSendQueue {
     } else if (XmppClient.readyState === 3 || XmppClient.readyState === 2) {
       logMessageQueue("readyState: " + XmppClient.readyState);
       await XmppClient.silentRestart();
-      this.tryAgain();
       return;
     } else if (XmppClient.readyState === null) {
       logMessageQueue("readyState: " + XmppClient.readyState);
       await XmppClient.silentRestart();
-      this.tryAgain();
       return;
     }
 

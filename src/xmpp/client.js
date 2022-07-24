@@ -57,7 +57,6 @@ class XmppClient {
     logClient("silentRestart() called from message queue");
     let closingPromise = new Promise((res) => {
       if (this.xmpp.socket) {
-        console.log("wait for closed state : promise created...");
         logClient("wait for closed state : promise created...");
         let count = 0;
         let intervalId = setInterval(() => {
@@ -78,13 +77,13 @@ class XmppClient {
     });
 
     closingPromise.then(async () => {
-      console.log("promise then called...");
       logClient("promise then called...");
       await this.send(xml("presence", { type: "unavailable" }));
       await this.xmpp.stop();
       console.log("executing silent restart");
       logClient("executing silent restart");
       await this.initXmpp(this.credential);
+      MessageSendQueue.send();
     });
   }
 
