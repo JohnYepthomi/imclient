@@ -1,0 +1,21 @@
+.queue-logger {
+  position: sticky;
+  top: 0px;
+  width: 100%;
+  z-index: 99999;
+  background-color: #b47619;
+  padding: 5px;
+  font-size: 0.75rem;
+  color: rgb(237, 237, 243);
+}
+
+.client-logger {
+  position: sticky;
+  width: 100%;
+  top: 20px;
+  z-index: 999999;
+  background-color: rgb(30, 121, 27);
+  padding: 5px;
+  font-size: 0.75rem;
+  color: rgb(240, 240, 243);
+}

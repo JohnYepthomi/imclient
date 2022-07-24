@@ -173,23 +173,3 @@
   color: gray;
   align-self: center;
 }
-
-.queue-logger {
-  position: sticky;
-  top: 80px;
-  background-color: #d18718;
-  z-index: 999999;
-  padding: 5px;
-  font-size: 0.65rem;
-  color: blue;
-}
-
-.client-logger {
-  position: sticky;
-  top: 150px;
-  background-color: rgb(34, 218, 28);
-  z-index: 999999;
-  padding: 5px;
-  font-size: 0.65rem;
-  color: blue;
-}

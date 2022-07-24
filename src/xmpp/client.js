@@ -7,7 +7,7 @@ class XmppClient {
   static clientJID;
   static xmpp;
   static credential;
-  static readyState;
+  static status;
 
   static initXmpp(credentials) {
     this.clientJID = credentials.username; // add '@localhost' suffix
@@ -28,14 +28,15 @@ class XmppClient {
         await this.xmpp.stop();
       });
 
-      this.xmpp.on("offline", () => {
+      this.xmpp.on("offline", async () => {
         console.log("You are currently offline...");
+        await this.xmpp.stop();
+        logClient("client has been stopped...");
       });
 
       this.xmpp.on("status", (status) => {
         console.log(status);
-        this.readyState =
-          this.xmpp.socket && this.xmpp.socket.socket.readyState;
+        this.status = status;
       });
 
       this.xmpp.on("stanza", async (stanza) => {
@@ -46,6 +47,7 @@ class XmppClient {
       this.xmpp.on("online", async (address) => {
         await this.send(xml("presence"));
         localStorage.setItem("loggedOut", false);
+        // await MessageSendQueue.send();
         res(true);
       });
 
@@ -53,38 +55,10 @@ class XmppClient {
     });
   }
 
-  static async silentRestart() {
+  static async silentRestartIfOffline() {
     logClient("silentRestart() called from message queue");
-    let closingPromise = new Promise((res) => {
-      if (this.xmpp.socket) {
-        logClient("wait for closed state : promise created...");
-        let count = 0;
-        let intervalId = setInterval(() => {
-          if (this.xmpp.socket.socket.readyState === 3) {
-            logClient(
-              "client socket readystate: " + this.xmpp.socket.socket.readyState
-            );
-            clearInterval(intervalId);
-            logClient("resolving promise for silent restart");
-            res();
-          }
-          count++;
-        }, 300);
-      } else {
-        logClient("resolving promise for silent restart");
-        res();
-      }
-    });
-
-    closingPromise.then(async () => {
-      logClient("promise then called...");
-      await this.send(xml("presence", { type: "unavailable" }));
-      await this.xmpp.stop();
-      console.log("executing silent restart");
-      logClient("executing silent restart");
-      await this.initXmpp(this.credential);
-      MessageSendQueue.send();
-    });
+    logClient("Restarting Client");
+    await this.initXmpp(this.credential);
   }
 
   static async gracefulExit() {

@@ -24,40 +24,48 @@ class MessageSendQueue {
   }
 
   static async send() {
-    if (!navigator.onLine || this.mq.length === 0) {
+    if (this.mq.length === 0) return;
+
+    if (!navigator.onLine) {
       logMessageQueue("offline");
       this.addOnlineListener();
       return;
     }
 
-    this.isFree = false;
-
-    if (XmppClient.readyState === 0) {
-      logMessageQueue("readyState: " + XmppClient.readyState);
+    if (XmppClient.status === "offline") {
+      await XmppClient.silentRestartIfOffline();
       this.tryAgain();
-      return;
-    } else if (XmppClient.readyState === 3 || XmppClient.readyState === 2) {
-      logMessageQueue("readyState: " + XmppClient.readyState);
-      await XmppClient.silentRestart();
-      return;
-    } else if (XmppClient.readyState === null) {
-      logMessageQueue("readyState: " + XmppClient.readyState);
-      await XmppClient.silentRestart();
+    }
+
+    if (XmppClient.status !== "online") {
+      this.tryAgain();
       return;
     }
 
-    logMessageQueue("sending message");
-    await XmppClient.sendMessage(this.mq[0].senderjid, this.mq[0].message);
-    //Also update redux state with message sent : true;
-    this.removeHead();
+    this.isFree = false;
 
-    if (this.mq.length > 0) this.tryAgain();
-    this.isFree = true;
+    logMessageQueue("sending message");
+    try {
+      await XmppClient.sendMessage(this.mq[0].senderjid, this.mq[0].message);
+      //Also update redux state with message sent : true;
+      this.removeHead();
+      if (this.mq.length > 0) this.tryAgain();
+      this.isFree = true;
+    } catch (e) {
+      console.log(e);
+      this.tryAgain();
+      return;
+    }
   }
 
   static addOnlineListener() {
     const onOnline = async function onOnline() {
-      await this.send();
+      window.removeEventListener("online", onOnline);
+      logMessageQueue("connection back online");
+      if (XmppClient.status === "offline") {
+        await XmppClient.silentRestartIfOffline();
+        await this.send();
+      } else this.send();
     }.bind(this);
     window.addEventListener("online", onOnline);
   }
