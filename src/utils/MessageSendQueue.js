@@ -1,58 +1,71 @@
-import XmppClient from '../xmpp/client.js'
-import _store from '../store/store';
+import XmppClient from "../xmpp/client.js";
+import _store from "../store/store";
 
-let credential = _store.getState().auth.credential;
-// FIFO MESSAGE SEND QUEUE
+/* FIFO Message Queue */
+class MessageSendQueue {
+  static mq = [];
+  static isFree = true;
+  static online = false;
 
-class MessageSendQueue{
-	static mq = [];
-	static isFree = true;
-	static online = false;
+  static add(payload) {
+    this.mq.push(payload);
 
-	static add(payload){
-		this.mq.push(payload);
+    if (this.isFree) this.send();
+  }
 
-		if(this.isFree)
-			this.send();
-	}
+  static removeHead() {
+    let shiftedElement = this.mq.shift();
+  }
 
-	static removeHead(){
-		let shiftedElement = this.mq.shift();
-		console.log({shiftedElement});
-	}
+  static tryAgain() {
+    setTimeout(async () => {
+      await this.send();
+    }, 2500);
+  }
 
-	static onNetworkChange(status){
-		this.online = status;
-	}
+  static async send() {
+    if (!navigator.onLine || this.mq.length === 0) {
+      logMessageQueue("offline");
+      this.addOnlineListener();
+      return;
+    }
 
-	static tryAgain(){
-		setTimeout(()=>{
-			console.log('%c trying to send again.....', 'color: orange; font-size: 0.75rem;');
-			console.log('Messages in Queue: ', this.mq.length);
-			this.send();
-		}, 2500);
-	}
+    this.isFree = false;
 
-	static async send(){
-		if(this.mq.length === 0){
-			return;
-		}
+    if (XmppClient.readyState === 0) {
+      logMessageQueue("readyState: " + XmppClient.readyState);
+      this.tryAgain();
+      return;
+    } else if (XmppClient.readyState !== 1) {
+      logMessageQueue("readyState: " + XmppClient.readyState);
+      await XmppClient.silentRestart();
+      this.tryAgain();
+      return;
+    }
 
-		if(!XmppClient.isReady()){
-			this.tryAgain();
-			return;
-		}
+    logMessageQueue("sending message");
+    await XmppClient.sendMessage(this.mq[0].senderjid, this.mq[0].message);
+    //Also update redux state with message sent : true;
+    this.removeHead();
 
-		this.isFree = false;
-		console.log('Sending Message: ', this.mq[0]);
+    if (this.mq.length > 0) this.tryAgain();
+    this.isFree = true;
+  }
 
-		XmppClient.sendMessage(this.mq[0].senderjid, this.mq[0].message);
-		//Also update redux state with message sent : true;
-		this.removeHead();
+  static addOnlineListener() {
+    const onOnline = async function onOnline() {
+      await this.send();
+    }.bind(this);
+    window.addEventListener("online", onOnline);
+  }
+}
 
-		if(this.mq.length > 0) this.tryAgain(); 
-		this.isFree = true;
-	}
+function logMessageQueue(item) {
+  document.querySelector(".queue-logger").innerText = item;
+
+  setTimeout(() => {
+    document.querySelector(".queue-logger").innerText = "idle";
+  }, 2000);
 }
 
 export default MessageSendQueue;

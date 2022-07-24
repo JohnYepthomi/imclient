@@ -1,11 +1,11 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
 }
 
-:root{
+:root {
   --fs: 0.88rem;
   --fw: normal;
 
@@ -22,14 +22,14 @@
   --border-lg: 3px;
   --border-clr: #ccc;
 
-  --font-primary: 'ubuntu', sans-serif;
+  --font-primary: "ubuntu", sans-serif;
 }
 
-body{
+body {
   font-family: var(--font-primary);
 }
 
-a{
+a {
   text-decoration: none;
   color: inherit;
 }

@@ -1,12 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit'
-import messageReducer from '../features/messages/messageSlice';
-import contactsReducer from '../features/messages/contactsSlice';
-import authReducer from '../features/messages/authSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import messageReducer from "../features/messageSlice";
+import contactsReducer from "../features/contactsSlice";
+import authReducer from "../features/authSlice";
 
 export default configureStore({
   reducer: {
     messages: messageReducer,
     auth: authReducer,
     contacts: contactsReducer,
-  }
+  },
 });

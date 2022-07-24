@@ -1,129 +1,116 @@
-/* 
-    Available Selectors:
-        ids: 
-            - none.
-        classes: 
-            - message-view-container : Parent Element.
-            - message-header: the message-viwe header.
-            - from : sender message container.
-            - from-username : the message sender username.
-            - my : current user.
-            - body : the message body.
-            - message-input-container : the message input container.
-            - message-input: the message input area. 
-            - message-send-button : the send button.
- */
- ::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
 }
 /* Optional: show position indicator in red */
-::-webkit-scrollbar-thumb {
-    background: #FF0000;
+/* ::-webkit-scrollbar-thumb {
+  background: #6d1212;
+} */
+
+.message-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--padding-md);
+  background-color: #2f2330;
+  z-index: 1;
 }
 
-.message-header{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--padding-md);
-    background-color: #2f2330;
-    z-index: 1;
+.back-button,
+.more {
+  padding: 10px;
+  cursor: pointer;
 }
 
-.back-button, .more{
-    padding: 10px;
-    cursor: pointer;
+.user-name {
+  font-size: var(--fs);
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
 }
 
-.user-name{
-    font-size: var(--fs);
-    color: white;
-    font-weight: bold;
-    text-transform: capitalize;
+.message-input-container {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: var(--padding-sm);
+  background-color: #f9f8e9;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.message-input-container{
-    position: sticky;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: var(--padding-sm);
-    background-color: #f9f8e9;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+.message-input {
+  width: 100%;
+  height: 40px;
+  border-radius: 7px;
+  border: none;
+  font-size: 1rem;
+  padding: var(--padding-sm);
+  outline: none;
+  box-shadow: 0px 1px 5px 0.1px rgba(116, 114, 114, 0.75);
 }
 
-.message-input{
-    width: 100%;
-    height: 40px;
-    border-radius: 7px;
-    border: none;
-    font-size: 1rem;
-    padding: var(--padding-sm);
-    outline: none;
-    box-shadow: 0px 1px 5px 0.1px rgba(116, 114, 114, 0.75);
+.message-send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #d19337;
+  box-shadow: 0px 1px 2px 0.1px rgba(116, 114, 114, 0.75);
+  cursor: pointer;
+  user-select: none;
 }
 
-.message-send-button{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background-color: #d19337;
-    box-shadow: 0px 1px 2px 0.1px rgba(116, 114, 114, 0.75);
-    cursor: pointer;
-    user-select: none;
+.message-view-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  background-color: #f9f8e9;
+  gap: 10px;
+  font-size: 0.85rem;
+  padding: 17px;
+  margin-top: 40px;
+  min-height: calc(100vh - 35px);
 }
 
-.message-view-container{
-    width: 100%;
-    display: flex;
-    flex-direction: column-reverse;
-    background-color: #f9f8e9;
-    gap: 10px;
-    font-size: 0.85rem;
-    padding: 17px;
-    margin-top: 40px;
-    min-height: calc(100vh - 35px);
+.from {
+  position: relative;
+  width: fit-content;
+  min-width: 100px;
+  max-width: 300px;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 0 5px 5px 5px;
+  word-break: break-all;
+  background-color: gray;
 }
 
-.from{
-    position: relative;
-    width: fit-content;
-    min-width: 100px;
-    max-width: 300px;
-    padding: 5px 10px;
-    color: white;
-    border-radius:  0 5px 5px 5px;
-    background-color: gray;
+.from .stamp-ticks-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
 }
 
-.from .stamp-ticks-container{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 5px;
-    margin-top: 5px;
+.from .stamp-ticks-container .stamp {
+  color: white;
+  font-size: 0.55rem;
 }
 
-.from .stamp-ticks-container .stamp{
-    color: white;
-    font-size: 0.55rem;
-}
-
-.from::after{
+.from::after {
   position: absolute;
   content: "";
   width: 0px;
@@ -138,19 +125,19 @@
 
 /* SELF  */
 
-.self{
-    position: relative;
-    align-self: flex-end;
-    width: fit-content;
-    min-width: 100px;
-    max-width: 300px;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: lightcoral;
+.self {
+  position: relative;
+  align-self: flex-end;
+  min-width: 100px;
+  max-width: 150px;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  word-break: break-all;
+  background-color: lightcoral;
 }
 
-.self::after{
+.self::after {
   position: absolute;
   content: "";
   width: 0px;
@@ -163,27 +150,36 @@
   right: -10px;
 }
 
-.self .stamp-ticks-container{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 5px;
-    margin-top: 5px;
+.self .stamp-ticks-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
 }
 
-.self .stamp-ticks-container .stamp{
-    color: lightyellow;
-    font-size: 0.55rem;
+.self .stamp-ticks-container .stamp {
+  color: lightyellow;
+  font-size: 0.55rem;
 }
 
-.date-bookmark{
-    font-size: 0.75rem;
-    text-align: center;
-    border-radius: 15px;
-    width: 100px;
-    padding: 5px;
-    background-color: lightgray;
-    color: gray;
-    align-self: center;
+.date-bookmark {
+  font-size: 0.75rem;
+  text-align: center;
+  border-radius: 15px;
+  width: 100px;
+  padding: 5px;
+  background-color: lightgray;
+  color: gray;
+  align-self: center;
 }
 
+.queue-logger {
+  position: sticky;
+  top: 1px;
+  background-color: #d193375b;
+  z-index: 999999;
+  padding: 2px;
+  font-size: 0.65rem;
+  color: wheat;
+}

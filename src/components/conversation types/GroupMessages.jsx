@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function GroupMessages() {
-  return (
-    <div>GroupMessages</div>
-  )
+  return <div>GroupMessages</div>;
 }

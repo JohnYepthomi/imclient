@@ -1,26 +1,25 @@
-class AckQueue{
-	static mq = [];
+class AckQueue {
+  static mq = [];
 
-	static add(msg){
-		this.mq.push(msg);
-		console.log(this.mq);
-	}
+  static add(msg) {
+    this.mq.push(msg);
+    console.log(this.mq);
+  }
 
-	static get(jid){
-		let targetAck;
+  static get(jid) {
+    let targetAck;
 
-		this,mq = this.mq.map((m, index)=>{
-			if(m[index][jid])
-				targetAck = m[index][jid];
-			else
-				return m; 
-		});
+    this,
+      (mq = this.mq.map((m, index) => {
+        if (m[index][jid]) targetAck = m[index][jid];
+        else return m;
+      }));
 
-		console.log(targetAck);
-		console.log(this.mq);
+    console.log(targetAck);
+    console.log(this.mq);
 
-		return targetAck;
-	}
+    return targetAck;
+  }
 }
 
 export default AckStore;
