@@ -36,7 +36,12 @@ class MessageSendQueue {
       logMessageQueue("readyState: " + XmppClient.readyState);
       this.tryAgain();
       return;
-    } else if (XmppClient.readyState !== 1) {
+    } else if (XmppClient.readyState === 3 || XmppClient.readyState === 2) {
+      logMessageQueue("readyState: " + XmppClient.readyState);
+      await XmppClient.silentRestart();
+      this.tryAgain();
+      return;
+    } else if (XmppClient.readyState === null) {
       logMessageQueue("readyState: " + XmppClient.readyState);
       await XmppClient.silentRestart();
       this.tryAgain();
@@ -64,7 +69,7 @@ function logMessageQueue(item) {
   document.querySelector(".queue-logger").innerText = item;
 
   setTimeout(() => {
-    document.querySelector(".queue-logger").innerText = "idle";
+    document.querySelector(".queue-logger").innerText = "queue idle";
   }, 2000);
 }
 

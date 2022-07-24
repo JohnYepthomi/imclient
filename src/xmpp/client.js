@@ -54,27 +54,36 @@ class XmppClient {
   }
 
   static async silentRestart() {
+    logClient("silentRestart() called from message queue");
     let closingPromise = new Promise((res) => {
       if (this.xmpp.socket) {
         console.log("wait for closed state : promise created...");
+        logClient("wait for closed state : promise created...");
         let count = 0;
         let intervalId = setInterval(() => {
           if (this.xmpp.socket.socket.readyState === 3) {
+            logClient(
+              "client socket readystate: " + this.xmpp.socket.socket.readyState
+            );
             clearInterval(intervalId);
+            logClient("resolving promise for silent restart");
             res();
           }
           count++;
         }, 300);
       } else {
+        logClient("resolving promise for silent restart");
         res();
       }
     });
 
     closingPromise.then(async () => {
       console.log("promise then called...");
+      logClient("promise then called...");
       await this.send(xml("presence", { type: "unavailable" }));
       await this.xmpp.stop();
       console.log("executing silent restart");
+      logClient("executing silent restart");
       await this.initXmpp(this.credential);
     });
   }
@@ -343,6 +352,14 @@ function getTimestamp() {
     DAY = d.getDate();
 
   return `${DAY}/${MONTH}-${H}:${M}`;
+}
+
+function logClient(item) {
+  document.querySelector(".client-logger").innerText = item;
+
+  setTimeout(() => {
+    document.querySelector(".client-logger").innerText = "client idle";
+  }, 2000);
 }
 
 export default XmppClient;

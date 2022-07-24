@@ -117,7 +117,8 @@ export default function DirectMessages({ senderjid }) {
 
   return (
     <>
-      <div className="queue-logger">Logger</div>
+      <div className="queue-logger">Queue Logger</div>
+      <div className="client-logger">Client Logger</div>
       <div className="message-header">
         <Link to="/">
           <div className="back-button">
