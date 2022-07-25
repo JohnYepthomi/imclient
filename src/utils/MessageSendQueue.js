@@ -40,10 +40,10 @@ class MessageSendQueue {
       this.tryAgain();
     }
 
-    if (XmppClient.status !== "online") {
-      this.tryAgain();
-      return;
-    }
+    // if (XmppClient.status !== "online") {
+    //   this.tryAgain();
+    //   return;
+    // }
 
     this.isFree = false;
 
