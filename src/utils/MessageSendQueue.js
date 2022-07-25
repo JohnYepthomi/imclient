@@ -6,11 +6,14 @@ class MessageSendQueue {
   static mq = [];
   static isFree = true;
   static online = false;
+  static retryDone = true;
+  static listenerLoaded = false;
 
   static add(payload) {
     this.mq.push(payload);
 
-    if (this.isFree) this.send();
+    if (this.isFree && this.retryDone) this.send();
+    else return;
   }
 
   static removeHead() {
@@ -19,9 +22,13 @@ class MessageSendQueue {
 
   static tryAgain() {
     logMessageQueue("retrying send message");
-    setTimeout(async () => {
-      await this.send();
-    }, 2500);
+    if (this.retryDone)
+      setTimeout(async () => {
+        logMessageQueue("sending message on tryAgain() timeout");
+        await this.send();
+        this.retryDone = true;
+      }, 2500);
+    else return;
   }
 
   static async send() {
@@ -31,19 +38,30 @@ class MessageSendQueue {
 
     if (!navigator.onLine) {
       logMessageQueue("offline");
-      this.addOnlineListener();
+      if (!this.listenerLoaded) {
+        this.addOnlineListener();
+        this.listenerLoaded = true;
+      }
       return;
     }
 
     if (XmppClient.status === "offline") {
       await XmppClient.silentRestartIfOffline();
       this.tryAgain();
+      this.retryDone = false;
     }
 
-    // if (XmppClient.status !== "online") {
-    //   this.tryAgain();
-    //   return;
-    // }
+    if (
+      XmppClient.status === "disconnect" ||
+      XmppClient.status === "disconnecting" ||
+      XmppClient.status === "connecting" ||
+      XmppClient.status === "connect" ||
+      XmppClient.status === "opening"
+    ) {
+      this.tryAgain();
+      this.retryDone = false;
+      return;
+    }
 
     this.isFree = false;
 
@@ -52,8 +70,11 @@ class MessageSendQueue {
       await XmppClient.sendMessage(this.mq[0].senderjid, this.mq[0].message);
       //Also update redux state with message sent : true;
       this.removeHead();
-      if (this.mq.length > 0) this.tryAgain();
-      this.isFree = true;
+      if (this.mq.length > 0) {
+        this.tryAgain();
+      } else {
+        this.isFree = true;
+      }
     } catch (e) {
       console.log(e);
       this.tryAgain();
@@ -68,7 +89,11 @@ class MessageSendQueue {
       if (XmppClient.status === "offline") {
         await XmppClient.silentRestartIfOffline();
         await this.send();
-      } else this.send();
+      } else {
+        this.send();
+      }
+
+      this.listenerLoaded = false;
     }.bind(this);
     window.addEventListener("online", onOnline);
   }
