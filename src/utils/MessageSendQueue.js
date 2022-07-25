@@ -4,8 +4,6 @@ import _store from "../store/store";
 /* FIFO Message Queue */
 class MessageSendQueue {
   static mq = [];
-  static isFree = true;
-  static online = false;
   static retryDone = true;
   static listenerLoaded = false;
 
@@ -15,7 +13,7 @@ class MessageSendQueue {
   }
 
   static removeHead() {
-    let shiftedElement = this.mq.shift();
+    this.mq.shift();
   }
 
   static tryAgain() {
@@ -26,7 +24,6 @@ class MessageSendQueue {
         await this.send();
         this.retryDone = true;
       }, 2500);
-    else return;
   }
 
   static async send() {
