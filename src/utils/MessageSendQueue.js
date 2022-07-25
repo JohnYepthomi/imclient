@@ -27,7 +27,7 @@ class MessageSendQueue {
   static async send() {
     if (this.mq.length === 0) return;
 
-    logMessageQueue("XmppClient.status: ", XmppClient.status);
+    logMessageQueue("XmppClient.status: " + XmppClient.status);
 
     if (!navigator.onLine) {
       logMessageQueue("offline");
