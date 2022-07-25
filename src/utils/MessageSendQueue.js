@@ -11,9 +11,7 @@ class MessageSendQueue {
 
   static add(payload) {
     this.mq.push(payload);
-
-    if (this.isFree && this.retryDone) this.send();
-    else return;
+    this.send();
   }
 
   static removeHead() {
@@ -63,18 +61,12 @@ class MessageSendQueue {
       return;
     }
 
-    this.isFree = false;
-
     logMessageQueue("sending message");
     try {
       await XmppClient.sendMessage(this.mq[0].senderjid, this.mq[0].message);
       //Also update redux state with message sent : true;
       this.removeHead();
-      if (this.mq.length > 0) {
-        this.tryAgain();
-      } else {
-        this.isFree = true;
-      }
+      if (this.mq.length > 0) this.tryAgain();
     } catch (e) {
       console.log(e);
       this.tryAgain();

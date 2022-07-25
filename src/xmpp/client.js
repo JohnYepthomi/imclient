@@ -82,13 +82,13 @@ class XmppClient {
     console.log({ a });
     console.log({ b });
 
-    let atime = a.split("-")[0];
-    let aday = +atime.split("/")[0];
-    let amonth = +atime.split("/")[1];
+    // let atime = a.split("-")[0];
+    // let aday = +atime.split("/")[0];
+    // let amonth = +atime.split("/")[1];
 
-    let btime = b.split("-")[0];
-    let bday = +btime.split("/")[0];
-    let bmonth = +btime.split("/")[1];
+    // let btime = b.split("-")[0];
+    // let bday = +btime.split("/")[0];
+    // let bmonth = +btime.split("/")[1];
 
     let C = new Date(b);
     let P = new Date(a);
