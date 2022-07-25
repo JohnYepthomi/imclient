@@ -76,10 +76,6 @@ class MessageSendQueue {
 
 function logMessageQueue(item) {
   document.querySelector(".queue-logger").innerText = item;
-
-  setTimeout(() => {
-    document.querySelector(".queue-logger").innerText = "queue idle";
-  }, 2000);
 }
 
 export default MessageSendQueue;

@@ -330,9 +330,9 @@ function getTimestamp() {
 function logClient(item) {
   document.querySelector(".client-logger").innerText = item;
 
-  setTimeout(() => {
-    document.querySelector(".client-logger").innerText = "client idle";
-  }, 2000);
+  // setTimeout(() => {
+  //   document.querySelector(".client-logger").innerText = "client idle";
+  // }, 2000);
 }
 
 export default XmppClient;

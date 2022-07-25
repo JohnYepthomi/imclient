@@ -5,6 +5,7 @@
   z-index: 99999;
   background-color: #b47619;
   padding: 5px;
+  text-align: center;
   font-size: 0.75rem;
   color: rgb(237, 237, 243);
 }
@@ -14,6 +15,7 @@
   width: 100%;
   top: 20px;
   z-index: 999999;
+  text-align: center;
   background-color: rgb(30, 121, 27);
   padding: 5px;
   font-size: 0.75rem;
