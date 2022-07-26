@@ -54,7 +54,9 @@ export default function Login() {
   return (
     <div className="login-container">
       <div className="login-body">
-        <h5> Rippl </h5>
+        <div>
+          Rippl<sup style={{ fontSize: "0.5rem", color: "black" }}>TM</sup>
+        </div>
         <div className="login-form">
           <div className="login-form-input">
             <input

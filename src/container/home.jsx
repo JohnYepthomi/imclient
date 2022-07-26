@@ -6,8 +6,8 @@ import "../styles/home.css";
 export default function Home() {
   return (
     <>
-      <div className="queue-logger">Queue logger</div>
-      <div className="client-logger">Client logger</div>
+      {/* <div className="queue-logger">Queue logger</div>
+      <div className="client-logger">Client logger</div> */}
       <Header />
       <Outlet />
     </>
