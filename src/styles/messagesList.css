@@ -86,13 +86,13 @@ ul {
 }
 
 .messages-list .message-sender-container .sender-name {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-transform: capitalize;
 }
 
 .messages-list img {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   object-fit: contain;
 }
@@ -110,12 +110,14 @@ ul {
 } */
 
 .new-message-peek {
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   color: #378169;
   font-style: italic;
   height: -moz-fit-content;
-  height: 13px;
+  height: 15px;
+  min-width: 200px;
   width: 200px;
+  max-width: 250px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
