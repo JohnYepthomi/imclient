@@ -58,6 +58,9 @@ class MessageSendQueue {
       return;
     }
 
+    let temp = XmppClient.status;
+    console.log(temp);
+
     logMessageQueue("sending message");
     try {
       await XmppClient.sendMessage(this.mq[0].senderjid, this.mq[0].message);
@@ -77,11 +80,8 @@ class MessageSendQueue {
       logMessageQueue("connection back online");
       if (XmppClient.status === "offline") {
         await XmppClient.silentRestartIfOffline();
-        await this.send();
-      } else {
-        this.send();
       }
-
+      await this.send();
       this.listenerLoaded = false;
     }.bind(this);
     window.addEventListener("online", onOnline);

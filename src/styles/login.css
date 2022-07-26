@@ -1,91 +1,90 @@
-/* Selectors:
-    ids:
-        - username
-        - password
-    classes:
-        - login-container: parent
-        - login-form-input : inputs container
-        - login-header: header container
-        - login-body : body container
-        - login-form : form container 
-        - login-button : login button 
-*/
-
-.login-container{
-    padding: 5px;
-    height: 100vh;
-    background-color: rgb(18, 16, 31);
+:root {
+  --shadow: 0px 1.5px 3px -1px gray;
 }
 
-.login-header{
-    text-align: center;
-    padding: 5px;
-    color: white;
-    border-bottom: 1px solid rgb(58, 55, 55);
+.login-container {
+  height: 100vh;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 500 300'%3E%3Cg fill-opacity='0.26'%3E%3Ccircle fill='%23FFFFFF' cx='400' cy='400' r='600'/%3E%3Ccircle fill='%23d6d8f4' cx='400' cy='400' r='500'/%3E%3Ccircle fill='%23aeb1e9' cx='400' cy='400' r='400'/%3E%3Ccircle fill='%238589dd' cx='400' cy='400' r='300'/%3E%3Ccircle fill='%235d62d2' cx='400' cy='400' r='200'/%3E%3Ccircle fill='%23343BC7' cx='400' cy='400' r='100'/%3E%3C/g%3E%3C/svg%3E");
+  /* background-attachment: fixed; */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
 }
 
-.login-body{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: calc(100vh - 20vh);
-    /* border: 1px solid red; */
+.login-header {
+  padding: 5px;
+  color: aliceblue;
+  text-align: center;
+  box-shadow: var(--shadow);
+  background-color: rgb(83, 66, 99);
 }
 
-h5{
-    padding: 10px;
-    font-size: 1.2rem;
-    color: chocolate;
+.login-body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 20vh);
+  /* border: 1px solid red; */
 }
 
-.login-form{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
+h5 {
+  padding: 10px;
+  font-size: 1.2rem;
+  color: rgb(68, 63, 59);
 }
 
-.login-form-input{
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-    justify-content: center;
-    gap: 3px;
-    padding: 5px;
+.login-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
 }
 
-.login-form-input label{
-    font-size: 0.75rem;
-    color: white;
+.login-form-input {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px;
 }
 
-#login-button{
-    border: none;
-    padding: 5px;
-    border-radius: 3px;
-    font-weight: bold;
-    width: 100%;
-    color: rgb(17, 16, 16);
-    background-color: rgb(111, 184, 82);
+.login-form-input label {
+  font-size: 0.75rem;
+  color: rgb(32, 31, 31);
 }
 
-input::placeholder{
-    padding: 3px;
-    font-size: 0.65rem;
+#login-button {
+  border: none;
+  padding: 5px;
+  border-radius: 3px;
+  font-weight: bold;
+  width: 100px;
+  color: rgb(236, 237, 247);
+  background-color: rgb(102, 88, 163);
+  cursor: pointer;
 }
 
-#username, #password{
-    border: none;
-    border: 1px solid gray;
-    border-radius: 3px;
-    height: 25px;
-    padding: 5px;
-    
+input::placeholder {
+  padding: 3px;
+  font-size: 0.75rem;
 }
 
-#username:focus, #password:focus{
-    outline: 1px solid blue;
+#username,
+#password {
+  border: none;
+  border-radius: 3px;
+  height: 35px;
+  width: 300px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+}
+
+#username:focus,
+#password:focus {
+  outline: 1px solid blue;
 }

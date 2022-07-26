@@ -53,29 +53,24 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <div className="login-header">
-        <h3>Piperchat</h3>
-      </div>
       <div className="login-body">
-        <h5> Login to Piperchat </h5>
+        <h5> Rippl </h5>
         <div className="login-form">
           <div className="login-form-input">
-            <label>Username</label>
             <input
               type="text"
               id="username"
               name="username"
-              placeholder="enter your user id"
+              placeholder="Rippl ID"
               ref={usernameRef}
             />
           </div>
           <div className="login-form-input">
-            <label>Password</label>
             <input
               type="password"
               id="password"
               name="password"
-              placeholder="enter your password"
+              placeholder="Password"
               ref={passwordRef}
             />
           </div>

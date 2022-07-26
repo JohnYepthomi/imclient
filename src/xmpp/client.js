@@ -20,12 +20,16 @@ class XmppClient {
         domain: "localhost",
         username: credentials.username,
         password: credentials.password,
-        // resource: "personal"
+        resource: "Desktop",
       });
 
       this.xmpp.on("error", async (err) => {
         console.log(err);
         await this.xmpp.stop();
+        if (navigator.onLine) {
+          this.initXmpp(this.credential);
+          MessageSendQueue.send();
+        }
       });
 
       this.xmpp.on("offline", async () => {
