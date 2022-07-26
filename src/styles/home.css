@@ -1,4 +1,5 @@
 .queue-logger {
+  display: none;
   position: sticky;
   top: 0px;
   width: 100%;
@@ -11,6 +12,7 @@
 }
 
 .client-logger {
+  display: none;
   position: sticky;
   width: 100%;
   top: 20px;
