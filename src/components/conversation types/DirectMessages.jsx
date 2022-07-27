@@ -176,8 +176,8 @@ export default function DirectMessages({ senderjid }) {
                         true === true ? (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="13"
-                            height="13"
+                            width="16"
+                            height="16"
                             fill="currentColor"
                             class="bi bi-check2"
                             viewBox="0 0 16 16"
@@ -187,8 +187,8 @@ export default function DirectMessages({ senderjid }) {
                         ) : (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="13"
-                            height="13"
+                            width="16"
+                            height="16"
                             fill="currentColor"
                             class="bi bi-check2-all"
                             viewBox="0 0 16 16"
@@ -223,8 +223,8 @@ export default function DirectMessages({ senderjid }) {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="18"
+            height="18"
             fill="white"
             className="bi bi-send-fill"
             viewBox="0 0 16 16"

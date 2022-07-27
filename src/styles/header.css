@@ -1,10 +1,10 @@
 .branding {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 10px;
+  justify-content: flex-start;
+  padding: 15px;
   padding-bottom: 5px;
-  background-color: rgb(62, 55, 87);
+  background-color: var(--brand-clr-1);
   width: 100%;
 }
 
@@ -17,9 +17,12 @@
 }
 
 .brand-name {
-  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   font-weight: 400;
-  color: white;
+  color: var(--brand-clr-5);
   font-weight: bold;
 }
 
@@ -36,14 +39,14 @@
   align-items: center;
   justify-content: space-around;
   font-size: var(--fs);
-  color: rgb(73, 68, 68);
-  background-color: rgb(204 197 241);
+  color: var(--brand-clr-5);
+  background-color: var(--brand-clr-1);
 }
 
 .menu-item {
   width: 100%;
   pointer-events: none;
-  font-weight: 450;
+  font-weight: bold;
 }
 
 .menu-item div {
@@ -62,5 +65,5 @@ a {
 
 .menu-item[active="true"] {
   border-bottom: 2px solid white;
-  box-shadow: 0px 5px 5px -4px gray;
+  box-shadow: 0px 5px 3px -4px rgb(167, 162, 162);
 }

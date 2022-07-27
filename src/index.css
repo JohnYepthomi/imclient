@@ -15,7 +15,11 @@
   --padding-md: 1rem;
   --padding-lg: 1.5rem;
 
-  --brand-color-1: #008069;
+  --brand-clr-1: #2c3531;
+  --brand-clr-2: #116466;
+  --brand-clr-3: #d9b086;
+  --brand-clr-4: #ffcb9a;
+  --brand-clr-5: #d1e8e2;
 
   --text-clr: white;
 
@@ -29,6 +33,7 @@
 
 body {
   font-family: var(--font-primary);
+  background-color: var(--brand-clr-5);
 }
 
 a {
