@@ -11,17 +11,17 @@ import Home from "./container/home";
 import store from "./store/store";
 import { Provider } from "react-redux";
 import { PrivateRoute } from "./auth/PrivateRouter";
-import XmppClient from "./xmpp/client";
+import ClientService from "./services/client.service";
 
 export default function App() {
-  /* close client session on App exit to prevent multiple sesssion atached to a single client*/
-  useEffect(() => {
-    const handleTabClose = async (event) => {
-      event.preventDefault();
-      await XmppClient.gracefulExit();
-      return true;
-    };
+  /* release resource*/
+  const handleTabClose = async (event) => {
+    event.preventDefault();
+    await ClientService.gracefulExit();
+    return true;
+  };
 
+  useEffect(() => {
     window.addEventListener("beforeunload", handleTabClose);
 
     return () => {

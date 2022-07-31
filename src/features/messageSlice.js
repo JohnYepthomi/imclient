@@ -1,4 +1,4 @@
-import { createSlice, createReducer } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 let localDMs = JSON.parse(localStorage.getItem("directMessages"));
 let localLMs = JSON.parse(localStorage.getItem("lastMessage"));
@@ -7,46 +7,60 @@ export const messageSlice = createSlice({
   name: "message",
 
   initialState: {
-    directMessages: localDMs || [],
+    directMessages: [],
     groupMessages: [],
     lastMessage: localLMs || [],
+    deliveryReceipts: [],
   },
 
   reducers: {
     newDirectMessage: (state, action) => {
+      let messageId = action.payload.id;
       let senderjid = action.payload.from;
       let message = action.payload.body;
       let stamp = action.payload.stamp;
+      let delivered = action.payload.delivered;
+      let sent = action.payload.sent;
       let isClientMessage = action.payload.isClientMessage;
       let itemIndex;
-      let prevMessages;
+      let prevState;
 
-      if (state.directMessages.some((msg) => msg[senderjid])) {
+      if (state.directMessages.some((msg) => msg[senderjid] !== null)) {
+        console.log("updating user messages already stored in redux");
         state.directMessages.forEach((dm, index) => {
           if (dm[senderjid]) {
-            prevMessages = dm[senderjid];
-            prevMessages.unshift({
+            prevState = dm[senderjid];
+            prevState.unshift({
+              from: senderjid,
+              id: messageId,
               chat: message,
-              isClientMessage: isClientMessage === true ? true : false,
+              isClientMessage: isClientMessage ? true : false,
               stamp,
+              delivered: delivered ? true : false,
+              sent: sent ? true : false,
             });
             itemIndex = index;
           }
         });
 
-        state.directMessages[itemIndex][senderjid] = prevMessages;
+        state.directMessages[itemIndex][senderjid] = prevState;
         localStorage.setItem(
           "directMessages",
           JSON.stringify(state.directMessages)
         );
       } else {
+        console.log("saving new user messages to redux");
         state.directMessages = [
           {
             [senderjid]: [
               {
+                id: messageId,
+                from: senderjid,
                 chat: message,
-                isClientMessage: isClientMessage === true ? true : false,
+                isClientMessage: isClientMessage ? true : false,
                 stamp,
+                delivered: delivered ? true : false,
+                sent: sent ? true : false,
               },
             ],
           },
@@ -93,6 +107,43 @@ export const messageSlice = createSlice({
         localStorage.setItem("lastMessage", JSON.stringify(state.lastMessage));
       }
     },
+
+    updateDeliveredMessage: (state, action) => {
+      let messageId = action.payload.id;
+
+      state.directMessages.forEach((user, firstIndex) => {
+        Object.values(user).forEach((usermessages) => {
+          usermessages.forEach((message) => {
+            if (message.isClientMessage && message.id === messageId) {
+              state.directMessages[firstIndex][message.from].forEach(
+                (m, mIndex) => {
+                  if (m.id === messageId) {
+                    state.directMessages[firstIndex][message.from][
+                      mIndex
+                    ].delivered = true;
+                  }
+                }
+              );
+            }
+          });
+        });
+      });
+    },
+
+    updateSentMessage: (state, action) => {
+      let messageId = action.payload.id;
+
+      state.directMessages.forEach((users, outerindex) => {
+        Object.values(users).forEach((usermessages, midIndex) => {
+          usermessages.forEach((message) => {
+            if (message.id === messageId)
+              state.directMessages[outerindex][message.from][
+                midIndex
+              ].sent = true;
+          });
+        });
+      });
+    },
   },
 });
 
@@ -100,5 +151,7 @@ export const {
   newDirectMessage,
   newGroupMessage,
   updateLastMessage,
+  updateDeliveredMessage,
+  updateSentMessage,
 } = messageSlice.actions;
 export default messageSlice.reducer;

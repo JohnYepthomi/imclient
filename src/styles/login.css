@@ -38,10 +38,15 @@ h5 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 10px;
   color: var(--brand-clr-5);
+  margin-bottom: 30px;
 }
 
+.login-branding > div {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
 .login-form {
   display: flex;
   /* align-items: center; */
@@ -72,6 +77,7 @@ h5 {
   color: var(--brand-clr-1);
   background-color: var(--brand-clr-5);
   cursor: pointer;
+  margin-top: 20px;
 }
 
 input::placeholder {

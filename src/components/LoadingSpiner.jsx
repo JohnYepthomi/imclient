@@ -3,14 +3,14 @@ import "../styles/loadingspinner.css";
 
 export default function LoadingSpiner({ submitted }) {
   return submitted ? (
-    <div style={{ visibility: "visible" }}>
+    <div style={{ visibility: "visible", marginTop: "30px" }}>
       <div className="lds-ripple">
         <div></div>
         <div></div>
       </div>
     </div>
   ) : (
-    <div style={{ visibility: "hidden" }}>
+    <div style={{ visibility: "hidden", marginTop: "30px" }}>
       <div className="lds-ripple">
         <div></div>
         <div></div>

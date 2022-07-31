@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/messagesList.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function MessagesList() {
   const [messages, setMessages] = useState();
@@ -57,9 +57,7 @@ export default function MessagesList() {
     ];
 
     setMessages(msgs);
-
-    console.log({ newMessage });
-  }, [newMessage]);
+  }, []);
 
   return (
     <div className="messages-container">

@@ -5,8 +5,8 @@ import authReducer from "../features/authSlice";
 
 export default configureStore({
   reducer: {
-    messages: messageReducer,
     auth: authReducer,
+    messages: messageReducer,
     contacts: contactsReducer,
   },
 });

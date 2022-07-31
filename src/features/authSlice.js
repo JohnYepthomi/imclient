@@ -1,50 +1,43 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import XmppClient from "../xmpp/client.js";
+import { createSlice } from "@reduxjs/toolkit";
 import StorageLocal from "../utils/storageLocal.js";
 
-let savedCredentials = StorageLocal.parseItem("credentials");
-let savedLoggedOut = StorageLocal.getItem("loggedOut");
+// let localUserInfo = StorageLocal.parseItem("userInfo");
 
 export const authSlice = createSlice({
   name: "authentication",
 
   initialState: {
-    credential: savedCredentials || [],
-    activeClient: false,
-    loggedOut: savedLoggedOut === "false" ? false : true,
+    userInfo: {},
+    loggedIn: false,
+    loggedOut: true,
   },
 
   reducers: {
-    logout: (state, action) => {
-      state.loggedOut = action.payload;
+    saveUserInfo: (state, action) => {
+      state.userInfo = action.payload;
+      StorageLocal.stringifyItem("userInfo", state.userInfo);
     },
-
-    saveCredential: (state, action) => {
-      state.credential[0] = {
-        username: action.payload.usernanme,
-        password: action.payload.password,
-      };
+    updateUserLogin: (state, action) => {
+      state.loggedIn = action.payload;
     },
   },
 
-  extraReducers: (builder) => {
-    builder.addCase(authenticateUser.fulfilled, (state, action) => {
-      state.activeClient = action.payload;
-    });
-  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(authenticateUser.fulfilled, (state, action) => {
+  //     //state.loggedIn = true;
+  //     //state.loggedOut = !state.loggedIn;
+  //   });
+  // },
 });
 
-export const authenticateUser = createAsyncThunk(
-  "authentication/authenticateUser",
-  async (credentials, thunkAPI) => {
-    let username = credentials.username;
-    let password = credentials.password;
-    let response = await XmppClient.initXmpp({ username, password });
-    StorageLocal.stringifyItem("credentials", [{ username, password }]);
+// export const authenticateUser = createAsyncThunk(
+//   "authentication/authenticateUser",
+//   async (arg, { getState }) => {
+//     // let state = getState();
+//     // diSetup(state.userInfo);
+//     return true;
+//   }
+// );
 
-    return response;
-  }
-);
-
-export const { logout, saveCredential } = authSlice.actions;
+export const { saveUserInfo, updateUserLogin } = authSlice.actions;
 export default authSlice.reducer;
