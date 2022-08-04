@@ -46,7 +46,7 @@ export default class StanzaService {
     await this.send(stanza);
   }
 
-  async sendReaction({ id, jid, emoji }) {
+  async sendReaction({ reactionId, jid, emoji }) {
     let stanza = this._xml(
       "message",
       {
@@ -56,7 +56,7 @@ export default class StanzaService {
       },
       this._xml(
         "reactions",
-        { id, xmlns: "urn:xmpp:reactions:0" },
+        { id: reactionId, xmlns: "urn:xmpp:reactions:0" },
         this._xml("reaction", {}, emoji)
       )
     );

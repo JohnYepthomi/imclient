@@ -92,7 +92,7 @@ export default function incomingStanzaHandler(stanza) {
     console.log({ stanza });
     let jid = stanza.attrs.from;
     let emoji = stanza.getChild("reactions").getChild("reaction").children[0];
-    let reactionId = stanza.getChild("reactions").attrs.id;
+    let reactionId = stanza.attrs.id;
 
     _stanzaServiceContext._dispatcher
       .actionsDispatcher()
