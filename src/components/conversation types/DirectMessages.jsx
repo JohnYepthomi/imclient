@@ -291,9 +291,7 @@ export default function DirectMessages({ senderjid }) {
                     </div>
                   </div>
                   {msg.reaction && (
-                    <div style={{ postion: "absolute", bottom: "10px" }}>
-                      {msg.reaction}
-                    </div>
+                    <div className="reactions-container">{msg.reaction}</div>
                   )}
                 </div>
                 {bookmark && <div className="date-bookmark">{bookmark}</div>}

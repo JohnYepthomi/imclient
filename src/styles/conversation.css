@@ -104,6 +104,7 @@
   font-size: 0.95rem;
   border-radius: 13px;
   word-break: break-word;
+  margin-bottom: 25px;
   background-color: rgb(161, 112, 112);
 }
 
@@ -146,6 +147,7 @@
   padding-bottom: 2px;
   padding-left: 15px;
   padding-right: 5px;
+  margin-bottom: 15px;
   letter-spacing: 2;
   border-radius: 13px;
   word-break: break-word;
@@ -211,4 +213,34 @@
 }
 .chat {
   pointer-events: none;
+}
+
+.self .reactions-container {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 0.72rem;
+  border-radius: 50%;
+  /* border: 1px solid red; */
+  background-color: white;
+  z-index: 9999;
+}
+
+.from .reactions-container {
+  position: absolute;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  border-radius: 50%;
+  /* border: 1px solid red; */
+  background-color: white;
+  z-index: 9999;
 }
