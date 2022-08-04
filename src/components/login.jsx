@@ -25,7 +25,7 @@ export default function Login() {
       },
       domain: "localhost",
       service: "ws://ejimserver.herokuapp.com/",
-      resource: "Desktop",
+      resource: "mobile",
     };
 
     if (loggedOut) {

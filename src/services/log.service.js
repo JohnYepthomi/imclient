@@ -3,12 +3,12 @@ export function LogService(scope, color) {
   const logService = {
     info: (message) =>
       console.log(
-        "%c" + scope + " " + message,
+        scope + "%c" + " " + message,
         `color: ${color ? color : "teal"}`
       ),
     error: (message) =>
       console.error(
-        "%c" + scope + " " + message,
+        scope + "%c" + " " + message,
         `color: ${color ? color : "red"}`
       ),
   };

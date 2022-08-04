@@ -11,7 +11,7 @@ import Home from "./container/home";
 import store from "./store/store";
 import { Provider } from "react-redux";
 import { PrivateRoute } from "./auth/PrivateRouter";
-import ClientService from "./services/client.service";
+import ClientService from "./services/connection.service";
 
 export default function App() {
   /* release resource*/

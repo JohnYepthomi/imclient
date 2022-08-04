@@ -15,35 +15,40 @@ export const messageSlice = createSlice({
 
   reducers: {
     newDirectMessage: (state, action) => {
-      let messageId = action.payload.id;
-      let senderjid = action.payload.from;
-      let message = action.payload.body;
+      let id = action.payload.id;
+      let from = action.payload.from;
+      let chat = action.payload.body;
       let stamp = action.payload.stamp;
       let delivered = action.payload.delivered;
       let sent = action.payload.sent;
       let isClientMessage = action.payload.isClientMessage;
       let itemIndex;
       let prevState;
+      let entryExist = false;
 
-      if (state.directMessages.some((msg) => msg[senderjid] !== null)) {
+      state.directMessages.forEach((useritem) => {
+        if (useritem[from]) entryExist = true;
+      });
+
+      if (entryExist) {
         console.log("updating user messages already stored in redux");
         state.directMessages.forEach((dm, index) => {
-          if (dm[senderjid]) {
-            prevState = dm[senderjid];
+          if (dm[from]) {
+            prevState = dm[from];
             prevState.unshift({
-              from: senderjid,
-              id: messageId,
-              chat: message,
-              isClientMessage: isClientMessage ? true : false,
+              from,
+              id,
+              chat,
+              isClientMessage,
               stamp,
-              delivered: delivered ? true : false,
-              sent: sent ? true : false,
+              delivered,
+              sent,
             });
             itemIndex = index;
           }
         });
 
-        state.directMessages[itemIndex][senderjid] = prevState;
+        state.directMessages[itemIndex][from] = prevState;
         localStorage.setItem(
           "directMessages",
           JSON.stringify(state.directMessages)
@@ -52,15 +57,15 @@ export const messageSlice = createSlice({
         console.log("saving new user messages to redux");
         state.directMessages = [
           {
-            [senderjid]: [
+            [from]: [
               {
-                id: messageId,
-                from: senderjid,
-                chat: message,
-                isClientMessage: isClientMessage ? true : false,
+                id,
+                from,
+                chat,
+                isClientMessage,
                 stamp,
-                delivered: delivered ? true : false,
-                sent: sent ? true : false,
+                delivered,
+                sent,
               },
             ],
           },
@@ -144,6 +149,24 @@ export const messageSlice = createSlice({
         });
       });
     },
+
+    updateReaction: (state, action) => {
+      let jid = action.payload.jid.split("/")[0];
+      let emoji = action.payload.emoji;
+      let reactionId = action.payload.reactionId;
+
+      state.directMessages.forEach((users, usersIdx) => {
+        if (users[jid]) {
+          users[jid].forEach((msgs, msgsIdx) => {
+            if (msgs.id === reactionId) {
+              // if (msgs.reaction !== emoji) {
+              state.directMessages[usersIdx][jid][msgsIdx].reaction = emoji;
+              // }
+            }
+          });
+        }
+      });
+    },
   },
 });
 
@@ -153,5 +176,6 @@ export const {
   updateLastMessage,
   updateDeliveredMessage,
   updateSentMessage,
+  updateReaction,
 } = messageSlice.actions;
 export default messageSlice.reducer;

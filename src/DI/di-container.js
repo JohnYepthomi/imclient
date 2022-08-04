@@ -6,4 +6,5 @@ export default {
   StanzaService: throwNotInitialized,
   ClientService: throwNotInitialized,
   UserService: throwNotInitialized,
+  Dispatcher: throwNotInitialized,
 };

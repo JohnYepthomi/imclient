@@ -6,7 +6,6 @@ export default class UserService {
     this._service = userInfo.service;
     this._resource = userInfo.resource;
     this._logger = LogService("UserService -> ", "violet");
-    this._logger.info("UserService constructor called");
   }
 
   getId() {

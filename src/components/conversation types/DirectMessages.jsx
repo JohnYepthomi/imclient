@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import container from "../../DI/di-container";
+import useLongPress from "../../hooks/long.press";
 
 export default function DirectMessages({ senderjid }) {
   const messageInputRef = useRef();
@@ -11,7 +12,10 @@ export default function DirectMessages({ senderjid }) {
       (usermsgs) => Object.keys(usermsgs)[0] === senderjid
     )
   );
-  const receipts = useSelector((state) => state.messages.deliveryReceipts);
+
+  const longpresshook = useLongPress(handleChatLongPress, 1000, {
+    captureEvent: true,
+  });
 
   const handleMessageInputEnter = async (e) => {
     if (e.keyCode === 13) {
@@ -41,31 +45,20 @@ export default function DirectMessages({ senderjid }) {
 
   async function composeAndSendMessage(message) {
     let newMessage = {
-      id: generateId(5),
-      from: senderjid,
+      jid: senderjid,
       body: message,
-      stamp: getTimestamp(),
-      isClientMessage: true,
-      delivered: false,
-      sent: false,
     };
 
     await StanzaService.sendChat(newMessage);
   }
 
-  function getTimestamp() {
-    var d = new Date();
-    let H = d.getHours(),
-      M = d.getMinutes(),
-      S = d.getSeconds(),
-      MONTH = d.getMonth(),
-      DAY = d.getDate();
-
-    return `${DAY}/${MONTH}-${H}:${M}:${S}`;
-  }
-
   function scrollToLastMessage() {
     window.scrollTo(0, document.body.scrollHeight);
+  }
+
+  async function handleChatLongPress() {
+    console.log("handleChatLongPress: ", this.target.previousSibling);
+    this.target.firstChild.style.display = "flex";
   }
 
   function getBookmark(index, messages, senderjid) {
@@ -106,24 +99,48 @@ export default function DirectMessages({ senderjid }) {
     }
   }
 
-  function generateId(length) {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
+  useEffect(() => {
+    scrollToLastMessage();
+    console.log("DirectMessages useEffect");
+  }, [sendermessages]);
 
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
+  async function handleSelectEmoji(e) {
+    let emoji = e.target.innerText;
+    let reactionId = e.target.id;
+    let jid = e.target.getAttribute("jid");
 
-    return result;
+    console.log(e.target);
+
+    await StanzaService.sendReaction({ reactionId, jid, emoji });
+    StanzaService._dispatcher.actionsDispatcher().updateReaction({
+      jid,
+      reactionId,
+      emoji,
+    });
+    e.target.parentElement.style.display = "none";
   }
 
-  useEffect(() => {
-    console.log("use effect");
-    scrollToLastMessage();
-    console.log(sendermessages);
-  }, [sendermessages]);
+  let SelectEmoji = ({ jid, id }) => {
+    return (
+      <div className="emoji-container">
+        <div id={id} jid={jid} onClick={handleSelectEmoji}>
+          🌈
+        </div>
+        <div id={id} jid={jid} onClick={handleSelectEmoji}>
+          ⭐
+        </div>
+        <div id={id} jid={jid} onClick={handleSelectEmoji}>
+          ❇️
+        </div>
+        <div id={id} jid={jid} onClick={handleSelectEmoji}>
+          ✊
+        </div>
+        <div id={id} jid={jid} onClick={handleSelectEmoji}>
+          ⛺
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -176,7 +193,46 @@ export default function DirectMessages({ senderjid }) {
                 <div
                   className={msg.isClientMessage ? "self" : "from"}
                   key={index}
+                  {...longpresshook}
                 >
+                  <div className="emoji-container">
+                    <div
+                      id={msg.id}
+                      jid={senderjid}
+                      style={{ padding: "5px" }}
+                      onClick={handleSelectEmoji}
+                    >
+                      🌈
+                    </div>
+                    <div
+                      id={msg.id}
+                      jid={senderjid}
+                      onClick={handleSelectEmoji}
+                    >
+                      ⭐
+                    </div>
+                    <div
+                      id={msg.id}
+                      jid={senderjid}
+                      onClick={handleSelectEmoji}
+                    >
+                      ❇️
+                    </div>
+                    <div
+                      id={msg.id}
+                      jid={senderjid}
+                      onClick={handleSelectEmoji}
+                    >
+                      ✊
+                    </div>
+                    <div
+                      id={msg.id}
+                      jid={senderjid}
+                      onClick={handleSelectEmoji}
+                    >
+                      ⛺
+                    </div>
+                  </div>
                   <div className="chat">{msg.chat}</div>
 
                   <div className="stamp-ticks-container">
@@ -234,6 +290,11 @@ export default function DirectMessages({ senderjid }) {
                         ))}
                     </div>
                   </div>
+                  {msg.reaction && (
+                    <div style={{ postion: "absolute", bottom: "10px" }}>
+                      {msg.reaction}
+                    </div>
+                  )}
                 </div>
                 {bookmark && <div className="date-bookmark">{bookmark}</div>}
               </>
