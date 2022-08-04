@@ -124,19 +124,19 @@ export default function DirectMessages({ senderjid }) {
     return (
       <div className="emoji-container">
         <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          🌈
+          <span role={"image"}>🌈</span>
         </div>
         <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          ⭐
+          <span role={"image"}>⭐</span>
         </div>
         <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          ❇️
+          <span role={"image"}>❇️</span>
         </div>
         <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          ✊
+          <span role={"image"}>✊</span>
         </div>
         <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          ⛺
+          <span role={"image"}>⛺</span>
         </div>
       </div>
     );
