@@ -15,13 +15,16 @@ export const messageSlice = createSlice({
 
   reducers: {
     newDirectMessage: (state, action) => {
-      let id = action.payload.id;
-      let from = action.payload.from;
+      let {
+        id,
+        from,
+        stamp,
+        delivered,
+        sent,
+        isClientMessage,
+      } = action.payload;
       let chat = action.payload.body;
-      let stamp = action.payload.stamp;
-      let delivered = action.payload.delivered;
-      let sent = action.payload.sent;
-      let isClientMessage = action.payload.isClientMessage;
+
       let itemIndex;
       let prevState;
       let entryExist = false;
@@ -154,17 +157,72 @@ export const messageSlice = createSlice({
       let jid = action.payload.jid.split("/")[0];
       let emoji = action.payload.emoji;
       let reactionId = action.payload.reactionId;
+      let reactedby = action.payload.reactedby; //'reactionId' is the message ID
 
       state.directMessages.forEach((users, usersIdx) => {
         if (users[jid]) {
-          users[jid].forEach((msgs, msgsIdx) => {
-            if (msgs.id === reactionId) {
-              // if (msgs.reaction !== emoji) {
-              state.directMessages[usersIdx][jid][msgsIdx].reaction = emoji;
-              // }
+          users[jid].forEach((msg, msgsIdx) => {
+            if (msg.id === reactionId) {
+              //check if {reactions: []} property exists
+              if(state.directMessages[usersIdx][jid][msgsIdx].reactions){
+                /* Get the previous reaction state and mutate it with new values */
+                let prevReactions = state.directMessages[usersIdx][jid][msgsIdx].reactions;
+                let found = false;
+
+                if(!prevReactions.some((reaction, reactionidx) => reaction.emoji === emoji)){
+                  prevReactions.push({
+                    emoji,
+                    count: 1,
+                    reactors: [reactedby]
+                  });
+
+                  state.directMessages[usersIdx][jid][msgsIdx].reactions = prevReactions;
+                }else if(prevReactions.some(reaction => reaction.emoji === emoji)){
+                  prevReactions.forEach((reaction, reactionidx) => {
+                    if(reaction.emoji === emoji){
+
+                      if(!reaction.reactors.some(reactor => reactor === reactedby)){
+                        prevReactions[reactionidx].reactors.push(reactedby);
+                        prevReactions[reactionidx].count += 1;
+                      }
+                    }
+                  });
+
+                  state.directMessages[usersIdx][jid][msgsIdx].reactions = prevReactions;
+                }
+  
+              }else{
+                //create and update the new reaction property
+                state.directMessages[usersIdx][jid][msgsIdx].reactions = [{
+                  emoji,
+                  count: 1,
+                  reactors: [reactedby]
+                }];
+              }
             }
           });
         }
+      });
+    },
+
+    removeReaction: (state, action) => {
+      let reactionId = action.payload.reactionId;
+      let removedby = action.payload.removedby;
+
+      state.directMessages.forEach((user, usersIdx) => {
+        Object.values(user).forEach((messages) => {
+          messages.forEach((message, messageidx) => {
+            if (message.id === reactionId){
+              let jid = message.from;
+              message.reactions.forEach((reaction, reactionidx) => {
+                if(reaction.removedby !== 'self')
+                  state.directMessages[usersIdx][jid][messageidx].reactions.splice(reactionidx, 1);
+                else
+                  state.directMessages[usersIdx][jid][messageidx].reactions.splice(reactionidx, 1);
+              })              
+            }
+          });
+        });
       });
     },
   },

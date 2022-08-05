@@ -93,10 +93,11 @@ export default function incomingStanzaHandler(stanza) {
     let jid = stanza.attrs.from;
     let emoji = stanza.getChild("reactions").getChild("reaction").children[0];
     let reactionId = stanza.getChild("reactions").attrs.id;
+    let reactedby = stanza.attrs.from.split('/')[0];
 
     _stanzaServiceContext._dispatcher
       .actionsDispatcher()
-      .updateReaction({ reactionId, jid, emoji });
+      .updateReaction({ reactedby, reactionId, jid, emoji });
   }
 
   function ackResolver(stanza) {

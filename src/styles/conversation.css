@@ -18,7 +18,7 @@
   justify-content: space-between;
   padding: var(--padding-md);
   background-color: var(--brand-clr-1);
-  z-index: 1;
+  z-index: 2;
 }
 
 .back-button,
@@ -47,6 +47,7 @@
   padding-bottom: 10px;
   padding-left: 10px;
   padding-right: 10px;
+  z-index: 2;
 }
 
 .message-input {
@@ -80,16 +81,21 @@
   user-select: none;
 }
 
+/* -------------MESSAGE VIEW--------------- */
+
 .message-view-container {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column-reverse;
-  gap: 10px;
+  gap: 5px;
   font-size: 0.85rem;
   padding: 17px;
   margin-top: 40px;
   min-height: calc(100vh - 35px);
 }
+
+/*-------FROM-----*/
 
 .from {
   position: relative;
@@ -104,7 +110,6 @@
   font-size: 0.95rem;
   border-radius: 13px;
   word-break: break-word;
-  margin-bottom: 10px;
   background-color: rgb(161, 112, 112);
 }
 
@@ -135,7 +140,7 @@
   pointer-events: none;
 }
 
-/* SELF  */
+/*------SELF-----*/
 
 .self {
   position: relative;
@@ -147,7 +152,6 @@
   padding-bottom: 2px;
   padding-left: 15px;
   padding-right: 5px;
-  margin-bottom: 10px;
   letter-spacing: 2;
   border-radius: 13px;
   word-break: break-word;
@@ -191,10 +195,12 @@
   align-self: center;
 }
 
-.emoji-container {
+/* ------- Emoji Container ------- */
+
+.self .emoji-container {
   position: absolute;
   top: -32px;
-  left: -15px;
+  left: -50px;
   display: none;
   flex-direction: row;
   align-items: center;
@@ -206,6 +212,25 @@
   background-color: rgb(236, 226, 226);
   box-shadow: 0px 0px 10px -2px gray;
   border-radius: 15px;
+  z-index: 2;
+}
+
+.from .emoji-container {
+  position: absolute;
+  top: -32px;
+  right: -50px;
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.1rem;
+  gap: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  background-color: rgb(236, 226, 226);
+  box-shadow: 0px 0px 10px -2px gray;
+  border-radius: 15px;
+  z-index: 2;
 }
 
 .emoji-container > div {
@@ -215,34 +240,49 @@
   pointer-events: none;
 }
 
+/* ------- Reactions Container ------- */
+
 .self .reactions-container {
   position: absolute;
-  right: 10px;
+  right: -3px;
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
   justify-content: center;
-  width: 20px;
+  gap: 2px;
+  width: fit-content;
   height: 20px;
   font-size: 0.72rem;
-  border-radius: 50%;
-  /* border: 1px solid red; */
+  z-index: 1;
+}
+
+.reactions-container > div{
+  border-radius: 20px;
   background-color: white;
-  z-index: 9999;
-  box-shadow: 0px 0px 3px -0.8px rgb(63, 61, 61);
+  padding: 2px;
+  cursor: pointer;
+  box-shadow: 0px 0px 1.9px 0px rgb(63 61 61);
 }
 
 .from .reactions-container {
   position: absolute;
   left: 10px;
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   font-size: 0.72rem;
-  border-radius: 50%;
-  /* border: 1px solid red; */
-  background-color: white;
-  z-index: 9999;
-  box-shadow: 0px 0px 3px -0.8px rgb(63, 61, 61);
+  z-index: 1;
 }
+
+.self[data-reaction="true"] {
+  margin-bottom: 22px;
+}
+
+.from[data-reaction="true"] {
+  margin-bottom: 22px;
+}
+
+/* --------------- end---------------- */

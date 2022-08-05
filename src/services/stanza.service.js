@@ -46,7 +46,14 @@ export default class StanzaService {
     await this.send(stanza);
   }
 
-  async sendReaction({ reactionId, jid, emoji }) {
+  async sendReaction({ reactionId, reactedby, jid, emoji }) {
+    this._dispatcher.actionsDispatcher().updateReaction({
+      jid,
+      reactionId,
+      reactedby,
+      emoji,
+    });
+
     let stanza = this._xml(
       "message",
       {
@@ -62,6 +69,10 @@ export default class StanzaService {
     );
 
     await this.send(stanza);
+  }
+
+  async removeReaction({ reactionId }) {
+    //dispatch removeReaction() for self
   }
 
   async sendXep(s) {

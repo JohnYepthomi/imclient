@@ -1,11 +1,14 @@
-import React, { useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import container from "../../DI/di-container";
 import useLongPress from "../../hooks/long.press";
+import RemoveReactionModal from "./RemoveReactionModal";
 
 export default function DirectMessages({ senderjid }) {
   const messageInputRef = useRef();
+  const [reactionInfo, setReactionInfo] = useState();
+  const [showModal, setShowModal] = useState(false);
   const { StanzaService } = container;
   const sendermessages = useSelector((state) =>
     state.messages.directMessages.find(
@@ -13,7 +16,7 @@ export default function DirectMessages({ senderjid }) {
     )
   );
 
-  const longpresshook = useLongPress(handleChatLongPress, 1000, {
+  const chatLongPressHook = useLongPress(handleChatLongPress, 1000, {
     captureEvent: true,
   });
 
@@ -57,8 +60,20 @@ export default function DirectMessages({ senderjid }) {
   }
 
   async function handleChatLongPress() {
-    console.log("handleChatLongPress: ", this.target.previousSibling);
-    this.target.firstChild.style.display = "flex";
+    if (this.target.className === "self" || this.target.className === "from") {
+      let chat_el = this.target;
+      console.log("handleChatLongPress: ", this.target.previousSibling);
+      chat_el.firstChild.style.display = "flex";
+    }
+  }
+
+  async function handleReactionClick(e) {
+    console.log('handleReactionClick');
+    let reaction_el = e.target;
+    let reactionId = reaction_el.parentElement.getAttribute("data-id");
+
+    setReactionInfo({ reactionId });
+    setShowModal(true);
   }
 
   function getBookmark(index, messages, senderjid) {
@@ -108,15 +123,11 @@ export default function DirectMessages({ senderjid }) {
     let emoji = e.target.innerText;
     let reactionId = e.target.id;
     let jid = e.target.getAttribute("jid");
+    let reactedby = 'self';
 
     console.log(e.target);
 
-    await StanzaService.sendReaction({ reactionId, jid, emoji });
-    StanzaService._dispatcher.actionsDispatcher().updateReaction({
-      jid,
-      reactionId,
-      emoji,
-    });
+    await StanzaService.sendReaction({ reactionId, reactedby, jid, emoji });
     e.target.parentElement.style.display = "none";
   }
 
@@ -193,7 +204,8 @@ export default function DirectMessages({ senderjid }) {
                 <div
                   className={msg.isClientMessage ? "self" : "from"}
                   key={index}
-                  {...longpresshook}
+                  data-reaction={msg.reactions ? true : false}
+                  {...chatLongPressHook}
                 >
                   <div className="emoji-container">
                     <div
@@ -290,8 +302,18 @@ export default function DirectMessages({ senderjid }) {
                         ))}
                     </div>
                   </div>
-                  {msg.reaction && (
-                    <div className="reactions-container">{msg.reaction}</div>
+                  {msg.reactions && (
+                    <div
+                      className="reactions-container"
+                      data-id={msg.id}
+                    >
+                      {msg.reactions.map(reaction => {
+                        return (<div onClick={handleReactionClick} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                          { (reaction.count > 1) && <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',borderRadius: '50%', width: '10px', height: '10px', padding: '2px', backgroundColor: '#4a4444', fontSize: '0.52rem', fontWeight: 'bold'}}>{reaction.count}</div>}
+                          <div style={{fontSize: '0.95rem'}}>{reaction.emoji}</div>
+                         </div>)
+                      })}
+                    </div>
                   )}
                 </div>
                 {bookmark && <div className="date-bookmark">{bookmark}</div>}
@@ -299,6 +321,12 @@ export default function DirectMessages({ senderjid }) {
             );
           })}
       </div>
+      {showModal && (
+        <RemoveReactionModal
+          reactionInfo={reactionInfo}
+          setShowModal={setShowModal}
+        />
+      )}
 
       <div className="message-input-container">
         <input
