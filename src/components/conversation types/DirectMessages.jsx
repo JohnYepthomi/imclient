@@ -68,7 +68,7 @@ export default function DirectMessages({ senderjid }) {
   }
 
   async function handleReactionClick(e) {
-    console.log('handleReactionClick');
+    console.log("handleReactionClick");
     let reaction_el = e.target;
     let reactionId = reaction_el.parentElement.getAttribute("data-id");
 
@@ -123,7 +123,7 @@ export default function DirectMessages({ senderjid }) {
     let emoji = e.target.innerText;
     let reactionId = e.target.id;
     let jid = e.target.getAttribute("jid");
-    let reactedby = 'self';
+    let reactedby = "self";
 
     console.log(e.target);
 
@@ -211,7 +211,6 @@ export default function DirectMessages({ senderjid }) {
                     <div
                       id={msg.id}
                       jid={senderjid}
-                      style={{ padding: "5px" }}
                       onClick={handleSelectEmoji}
                     >
                       🌈
@@ -306,12 +305,20 @@ export default function DirectMessages({ senderjid }) {
                     <div
                       className="reactions-container"
                       data-id={msg.id}
+                      onClick={handleReactionClick}
                     >
-                      {msg.reactions.map(reaction => {
-                        return (<div onClick={handleReactionClick} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                          { (reaction.count > 1) && <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',borderRadius: '50%', width: '10px', height: '10px', padding: '2px', backgroundColor: '#4a4444', fontSize: '0.52rem', fontWeight: 'bold'}}>{reaction.count}</div>}
-                          <div style={{fontSize: '0.95rem'}}>{reaction.emoji}</div>
-                         </div>)
+                      {msg.reactions.length > 3 && (
+                        <div className="reaction-count">
+                          {msg.reactions.length}
+                        </div>
+                      )}
+                      {msg.reactions.map((reaction, idx) => {
+                        if (idx < 3)
+                          return (
+                            <>
+                              <div className="reaction">{reaction.emoji}</div>
+                            </>
+                          );
                       })}
                     </div>
                   )}
