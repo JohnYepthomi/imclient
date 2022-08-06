@@ -16,7 +16,7 @@ export default function DirectMessages({ senderjid }) {
     )
   );
 
-  const chatLongPressHook = useLongPress(handleChatLongPress, 1000, {
+  const chatLongPressHook = useLongPress(handleChatLongPress, 300, {
     captureEvent: true,
   });
 
@@ -69,9 +69,7 @@ export default function DirectMessages({ senderjid }) {
 
   async function handleReactionClick(e) {
     console.log("handleReactionClick");
-    let reaction_el = e.target;
-    let reactionId = reaction_el.parentElement.getAttribute("data-id");
-
+    let reactionId = e.target.getAttribute("data-id");
     setReactionInfo({ reactionId });
     setShowModal(true);
   }
