@@ -113,6 +113,10 @@ export default function DirectMessages({ senderjid }) {
   }
 
   useEffect(() => {
+    if (document.contains(document.querySelector(".emoji-container"))) {
+      //Hide emoji selector UI
+      document.querySelector(".emoji-container").style.display = "none";
+    }
     scrollToLastMessage();
     console.log("DirectMessages useEffect");
   }, [sendermessages]);
@@ -128,28 +132,6 @@ export default function DirectMessages({ senderjid }) {
     await StanzaService.sendReaction({ reactionId, reactedby, jid, emoji });
     e.target.parentElement.style.display = "none";
   }
-
-  let SelectEmoji = ({ jid, id }) => {
-    return (
-      <div className="emoji-container">
-        <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          <span role={"image"}>🌈</span>
-        </div>
-        <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          <span role={"image"}>⭐</span>
-        </div>
-        <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          <span role={"image"}>❇️</span>
-        </div>
-        <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          <span role={"image"}>✊</span>
-        </div>
-        <div id={id} jid={jid} onClick={handleSelectEmoji}>
-          <span role={"image"}>⛺</span>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <>
@@ -202,7 +184,9 @@ export default function DirectMessages({ senderjid }) {
                 <div
                   className={msg.isClientMessage ? "self" : "from"}
                   key={index}
-                  data-reaction={msg.reactions ? true : false}
+                  data-reaction={
+                    msg.reactions && msg.reactions.length > 0 ? true : false
+                  }
                   {...chatLongPressHook}
                 >
                   <div className="emoji-container">
@@ -299,7 +283,7 @@ export default function DirectMessages({ senderjid }) {
                         ))}
                     </div>
                   </div>
-                  {msg.reactions && (
+                  {msg.reactions && msg.reactions.length > 0 && (
                     <div
                       className="reactions-container"
                       data-id={msg.id}
@@ -328,6 +312,7 @@ export default function DirectMessages({ senderjid }) {
       </div>
       {showModal && (
         <RemoveReactionModal
+          senderjid={senderjid}
           reactionInfo={reactionInfo}
           setShowModal={setShowModal}
         />

@@ -9,15 +9,14 @@ import {
   updateDeliveredMessage,
   updateSentMessage,
   updateReaction,
+  removeReaction,
 } from "../features/messageSlice";
 import store from "../store/store";
 import incomingStanzaHandler from "../stanza.service.modules/incoming.stanza.handler";
 import StanzaService from "../services/stanza.service";
 import SendQueue from "../stanza.service.modules/send.queue";
 import XepModule from "../stanza.service.modules/xep.mods";
-/**
- * @param {object} connectionInfo
- */
+import UserService from "../services/user.service";
 
 export default async function diSetup(connectionInfo) {
   window.xmlBuilder = xml;
@@ -34,6 +33,9 @@ export default async function diSetup(connectionInfo) {
   /**-----------  LOGGER_SERVICE --------------------*/
   let logFactory = () => LogService;
 
+  /* ----------- User_service ---------------------- */
+  let userService = new UserService(connectionInfo, logFactory());
+
   /**--------- CUSTOM_REDUX_DISPATCHER ---------- */
   let actionsList = [
     { newDirectMessage },
@@ -41,6 +43,7 @@ export default async function diSetup(connectionInfo) {
     { updateDeliveredMessage },
     { updateSentMessage },
     { updateReaction },
+    { removeReaction },
   ];
   let dispatcher = new DispatcherService(store, actionsList, logFactory());
 
@@ -95,4 +98,5 @@ export default async function diSetup(connectionInfo) {
   container.StanzaService = stanzaService;
   container.ConnectionService = ConnectionService;
   container.Dispatcher = dispatcher;
+  container.UserService = userService;
 }

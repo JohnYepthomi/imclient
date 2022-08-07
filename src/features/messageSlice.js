@@ -343,22 +343,21 @@ export const messageSlice = createSlice({
 
     removeReaction: (state, action) => {
       let reactionId = action.payload.reactionId;
+      let sender = action.payload.jid;
       let removedby = action.payload.removedby;
 
       state.directMessages.forEach((user, usersIdx) => {
         Object.values(user).forEach((messages) => {
           messages.forEach((message, messageidx) => {
             if (message.id === reactionId) {
-              let jid = message.from;
               message.reactions.forEach((reaction, reactionidx) => {
-                if (reaction.removedby !== "self")
-                  state.directMessages[usersIdx][jid][
-                    messageidx
-                  ].reactions.splice(reactionidx, 1);
-                else
-                  state.directMessages[usersIdx][jid][
-                    messageidx
-                  ].reactions.splice(reactionidx, 1);
+                reaction.reactors.forEach((reactor) => {
+                  if (removedby === reactor) {
+                    state.directMessages[usersIdx][sender][
+                      messageidx
+                    ].reactions.splice(reactionidx, 1);
+                  }
+                });
               });
             }
           });
@@ -375,5 +374,6 @@ export const {
   updateDeliveredMessage,
   updateSentMessage,
   updateReaction,
+  removeReaction,
 } = messageSlice.actions;
 export default messageSlice.reducer;

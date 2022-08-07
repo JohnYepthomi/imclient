@@ -71,8 +71,24 @@ export default class StanzaService {
     await this.send(stanza);
   }
 
-  async removeReaction({ reactionId }) {
-    //dispatch removeReaction() for self
+  async removeReaction({ reactionId, to }) {
+    this._dispatcher.actionsDispatcher().removeReaction({
+      reactionId,
+      jid: to,
+      removedby: "self",
+    });
+
+    let reactionRemoveStanza = this._xml(
+      "message",
+      {
+        type: "chat",
+        to,
+        id: this.generateId(5),
+      },
+      this._xml("reactions", { id: reactionId, xmlns: "urn:xmpp:reactions:0" })
+    );
+
+    this.send(reactionRemoveStanza);
   }
 
   async sendXep(s) {

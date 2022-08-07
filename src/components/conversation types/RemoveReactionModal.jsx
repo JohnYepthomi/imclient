@@ -6,9 +6,11 @@ import { useSelector } from "react-redux";
 
 export default function RemoveReactionModal(props) {
   let reactionId = props.reactionInfo.reactionId;
+  let senderjid = props.senderjid;
   let directMessages = useSelector((state) => state.messages.directMessages);
   const [selfReaction, setSelfReaction] = useState();
   const [senderReactions, setSenderReactions] = useState([]);
+  let { StanzaService } = container;
 
   function preventModalExit(e) {
     e.stopPropagation();
@@ -17,6 +19,16 @@ export default function RemoveReactionModal(props) {
   function handleModalBoundaryClick() {
     console.log("handleModalBoundaryClick");
     props.setShowModal(false);
+  }
+
+  function handleRemoveUserReaction(e) {
+    let reactionId = e.target.getAttribute("data-reactionid");
+
+    StanzaService.removeReaction({
+      reactionId,
+      to: senderjid,
+    });
+    setSelfReaction(); //force update view to remove reaction form modal
   }
 
   function populateReactions() {
@@ -29,13 +41,13 @@ export default function RemoveReactionModal(props) {
 
               reaction.reactors.forEach((reactor) => {
                 if (reactor !== "self") reactors.push(reactor);
-                else setSelfReaction(reaction.emoji);
+                else setSelfReaction({ emoji: reaction.emoji, reactionId });
               });
 
               if (reactors.length > 0)
                 setSenderReactions((state) => [
                   ...state,
-                  { emoji: reaction.emoji, reactors },
+                  { emoji: reaction.emoji, reactors, reactionId },
                 ]);
             });
           }
@@ -66,13 +78,35 @@ export default function RemoveReactionModal(props) {
             })}
         </div>
         <div className="all-reactions">
-          <div className="reaction">
-            <div className="reactor-info">
-              <div className="reactor-name">You</div>
-              <div className="self-reaction-remove-info">Tap to remove</div>
+          {selfReaction && (
+            <div
+              className="modal-reaction"
+              data-reactionid={selfReaction.reactionId}
+              onClick={handleRemoveUserReaction}
+            >
+              <div className="reactor-info">
+                <div className="reactor-name">You</div>
+                <div className="self-reaction-remove-info">Tap to remove</div>
+              </div>
+              <div className="reactor-emoji">{selfReaction.emoji}</div>
             </div>
-            <div className="reactor-emoji">{selfReaction}</div>
-          </div>
+          )}
+
+          {senderReactions &&
+            senderReactions.map((reaction) => {
+              return reaction.reactors.map((reactor) => {
+                return (
+                  <div className="modal-reaction">
+                    <div className="reactor-info">
+                      <div className="reactor-name">
+                        {reactor.split("@")[0]}
+                      </div>
+                    </div>
+                    <div className="reactor-emoji">{reaction.emoji}</div>
+                  </div>
+                );
+              });
+            })}
         </div>
       </div>
     </div>
