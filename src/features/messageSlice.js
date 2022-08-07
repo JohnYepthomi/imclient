@@ -248,6 +248,11 @@ export const messageSlice = createSlice({
 
         state.directMessages[usridx][foundJID] = foundMsg;
       }
+
+      localStorage.setItem(
+        "directMessages",
+        JSON.stringify(state.directMessages)
+      );
     },
 
     removeReaction: (state, action) => {
@@ -272,6 +277,11 @@ export const messageSlice = createSlice({
           });
         });
       });
+
+      localStorage.setItem(
+        "directMessages",
+        JSON.stringify(state.directMessages)
+      );
     },
   },
 });
