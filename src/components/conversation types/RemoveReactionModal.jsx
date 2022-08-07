@@ -17,7 +17,6 @@ export default function RemoveReactionModal(props) {
   }
 
   function handleModalBoundaryClick() {
-    console.log("handleModalBoundaryClick");
     props.setShowModal(false);
   }
 
@@ -28,7 +27,8 @@ export default function RemoveReactionModal(props) {
       reactionId,
       to: senderjid,
     });
-    setSelfReaction(); //force update view to remove reaction form modal
+
+    setSelfReaction(); //re-render
   }
 
   function populateReactions() {
@@ -58,8 +58,7 @@ export default function RemoveReactionModal(props) {
 
   useEffect(() => {
     populateReactions();
-    console.log({ senderReactions });
-  }, []);
+  }, [directMessages]);
 
   return (
     <div className="remove-reaction-modal" onClick={handleModalBoundaryClick}>
@@ -91,7 +90,6 @@ export default function RemoveReactionModal(props) {
               <div className="reactor-emoji">{selfReaction.emoji}</div>
             </div>
           )}
-
           {senderReactions &&
             senderReactions.map((reaction) => {
               return reaction.reactors.map((reactor) => {

@@ -89,12 +89,10 @@ export default function incomingStanzaHandler(stanza) {
   }
 
   function reactionsResolver(stanza) {
-    console.log("reactionstanza", stanza);
     let jid = stanza.attrs.from.split("/")[0];
     let reactionId = stanza.getChild("reactions").attrs.id;
     let isRemoveReq = stanza.getChild("reactions").children.length === 0;
     let reactedby;
-    let removedby;
     let emoji;
 
     if (!isRemoveReq) {
@@ -104,15 +102,13 @@ export default function incomingStanzaHandler(stanza) {
         .actionsDispatcher()
         .updateReaction({ reactedby, reactionId, jid, emoji });
     } else {
-      removedby = stanza.attrs.from.split("/")[0]; //filter out the resource part of the jid
       _stanzaServiceContext._dispatcher
         .actionsDispatcher()
-        .removeReaction({ reactionId, jid, removedby });
+        .removeReaction({ reactionId, jid, removedby: jid });
     }
   }
 
   function ackResolver(stanza) {
-    console.log("ackResolver called...");
     stanza.children.forEach((child) => {
       let { id } = child.attrs;
       if (id) {

@@ -1,5 +1,5 @@
 .remove-reaction-modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: -70px;
   left: 0;

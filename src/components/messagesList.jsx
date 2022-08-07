@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../styles/messagesList.css";
 import { useSelector } from "react-redux";
+import "../styles/messagesList.css";
 
 export default function MessagesList() {
   const [messages, setMessages] = useState();

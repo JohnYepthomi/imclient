@@ -310,6 +310,7 @@ export default function DirectMessages({ senderjid }) {
             );
           })}
       </div>
+
       {showModal && (
         <RemoveReactionModal
           senderjid={senderjid}

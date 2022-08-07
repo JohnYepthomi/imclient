@@ -7,7 +7,7 @@ export const messageSlice = createSlice({
   name: "message",
 
   initialState: {
-    directMessages: [],
+    directMessages: localDMs || [],
     groupMessages: [],
     lastMessage: localLMs || [],
     deliveryReceipts: [],
@@ -108,7 +108,7 @@ export const messageSlice = createSlice({
         localStorage.setItem("lastMessage", JSON.stringify(state.lastMessage));
       } else {
         state.lastMessage = state.lastMessage.filter(
-          (lm, index) => Object.keys(lm)[0] !== action.payload.from
+          (lm) => Object.keys(lm)[0] !== action.payload.from
         );
 
         state.lastMessage.push({ [action.payload.from]: action.payload });
@@ -154,95 +154,6 @@ export const messageSlice = createSlice({
     },
 
     updateReaction: (state, action) => {
-      // let jid = action.payload.jid.split("/")[0];
-      // let emoji = action.payload.emoji;
-      // let reactionId = action.payload.reactionId;
-      // let reactedby = action.payload.reactedby; //'reactionId' is the message ID
-
-      // state.directMessages.forEach((users, usersIdx) => {
-      //   if (users[jid]) {
-      //     users[jid].forEach((msg, msgsIdx) => {
-      //       if (msg.id === reactionId) {
-      //         /* check if {reactions: []} property exists */
-      //         if (state.directMessages[usersIdx][jid][msgsIdx].reactions) {
-      //           /* Get the previous reaction state and mutate it with new values */
-      //           let prevReactions =
-      //             state.directMessages[usersIdx][jid][msgsIdx].reactions;
-      //           let alreadyReacted = false;
-
-      //           prevReactions.forEach((reaction) => {
-      //             reaction.reactors.forEach((reactor) => {
-      //               if (reactor === reactedby) alreadyReacted = true;
-      //             });
-      //           });
-
-      //           console.log({ alreadyReacted });
-      //           if (!alreadyReacted) {
-      //             /*
-      //               1. User's first reaction.
-      //               2. Check if there's already a reaction with the emoji.
-      //             */
-      //             if (
-      //               !prevReactions.some(
-      //                 (reaction, reactionidx) => reaction.emoji === emoji
-      //               )
-      //             ) {
-      //               prevReactions.push({
-      //                 emoji,
-      //                 count: 1,
-      //                 reactors: [reactedby],
-      //               });
-
-      //               state.directMessages[usersIdx][jid][
-      //                 msgsIdx
-      //               ].reactions = prevReactions;
-      //             } else if (
-      //               /* EMOJI EXISTS */
-      //               prevReactions.some((reaction) => reaction.emoji === emoji)
-      //             ) {
-      //               prevReactions.forEach((reaction, reactionidx) => {
-      //                 if (reaction.emoji === emoji) {
-      //                   if (
-      //                     !reaction.reactors.some(
-      //                       (reactor) => reactor === reactedby
-      //                     )
-      //                   ) {
-      //                     prevReactions[reactionidx].reactors.push(reactedby);
-      //                     prevReactions[reactionidx].count += 1;
-      //                   }
-      //                 } else {
-      //                   if (
-      //                     !reaction.reactors.some(
-      //                       (reactor) => reactor === reactedby
-      //                     )
-      //                   ) {
-      //                     prevReactions[reactionidx].reactors.push(reactedby);
-      //                     prevReactions[reactionidx].count += 1;
-      //                   }
-      //                 }
-      //               });
-
-      //               state.directMessages[usersIdx][jid][
-      //                 msgsIdx
-      //               ].reactions = prevReactions;
-      //             }
-      //           }
-      //         } else {
-      //           //create and update the new reaction property
-      //           state.directMessages[usersIdx][jid][msgsIdx].reactions = [
-      //             {
-      //               emoji,
-      //               count: 1,
-      //               reactors: [reactedby],
-      //             },
-      //           ];
-      //         }
-      //       }
-      //     });
-      //   }
-      // });
-
-      /* Temp Change */
       let reactionId = action.payload.reactionId;
       let reactedby = action.payload.reactedby;
       let emoji = action.payload.emoji;
@@ -251,7 +162,6 @@ export const messageSlice = createSlice({
       let foundJID;
       let foundMsg;
 
-      /* Find target User's Message to mutate*/
       state.directMessages.forEach((userdata, usersIdx) => {
         Object.values(userdata).forEach((messages) => {
           messages.forEach((message) => {
@@ -336,7 +246,6 @@ export const messageSlice = createSlice({
           }
         });
 
-        /* append it back to the state */
         state.directMessages[usridx][foundJID] = foundMsg;
       }
     },
