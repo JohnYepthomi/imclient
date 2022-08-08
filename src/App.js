@@ -12,6 +12,7 @@ import store from "./store/store";
 import { Provider } from "react-redux";
 import { PrivateRoute } from "./auth/PrivateRouter";
 import ClientService from "./services/connection.service";
+import NewGroupMessageSetup from "./components/NewGroupMessageSetup";
 
 export default function App() {
   /* release resource*/
@@ -37,6 +38,7 @@ export default function App() {
             <Route index={true} element={<MessagesList />} />
             <Route path="status" element={<Status />} />
             <Route path="contacts" element={<Contacts />} />
+            <Route path="groupsetup" element={<NewGroupMessageSetup />}></Route>
             <Route path="conversation/:senderjid" element={<Conversation />} />
           </Route>
         </Route>

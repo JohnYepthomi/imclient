@@ -1,0 +1,52 @@
+.group-setup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* justify-content: center; */
+  gap: 10px;
+  padding: 20px;
+}
+
+.new-group-name {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  /* border: 1px solid red; */
+}
+
+.new-group-name input {
+  border: none;
+  border: 1px solid lightgray;
+  height: 30px;
+  border-radius: 3px;
+  padding: 5px;
+  outline: none;
+  cursor: text;
+  font-size: 0.9rem;
+}
+
+.group-participants .header {
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
+
+.participant-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 10px;
+}
+
+/* .participant-details .profile-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 1px solid gray;
+  padding: 10px;
+} */
+
+.participant-close-button {
+  cursor: pointer;
+}

@@ -23,6 +23,17 @@
   border-radius: 2px;
 }
 
+/*-------------SAME PARENT-------- */
+.menu-more-button > a > div {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+  cursor: pointer;
+  /* border: 1px solid red; */
+}
+
 .menu-more-button > div {
   padding-top: 7px;
   padding-bottom: 7px;
@@ -32,6 +43,8 @@
   cursor: pointer;
   /* border: 1px solid red; */
 }
+
+/*-------------SAME PARENT END-------- */
 
 .menu-more-button > div:hover {
   background-color: rgba(156, 151, 151, 0.205);
