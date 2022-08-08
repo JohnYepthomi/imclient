@@ -65,8 +65,6 @@ export default function MessagesList() {
       key="message-list"
       initial={{ x: "-100vw" }}
       animate={{ x: 0 }}
-      exit={{ x: "-100vw" }}
-      // transition={{ ease: "linear" }}
       style={{ height: "calc(100vh - 100px)" }}
     >
       <div className="messages-container">

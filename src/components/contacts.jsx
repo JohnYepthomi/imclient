@@ -38,14 +38,7 @@ export default function Contacts() {
   ];
 
   return (
-    <motion.div
-      key="contacts-list"
-      initial={{ x: "100vw" }}
-      animate={{ x: 0 }}
-      exit={{ x: "-100vw" }}
-      // transition={{ ease: "linear" }}
-      className="roster-container"
-    >
+    <motion.div key="contact-list" initial={{ x: "-100vw" }} animate={{ x: 0 }}>
       <ul className="roster-whitelist">
         {user_roster.map((user_contact, index) => {
           return (
