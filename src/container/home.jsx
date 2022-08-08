@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components";
 import "../styles/home.css";
+import { motion } from "framer-motion/dist/framer-motion";
 
 export default function Home() {
   return (

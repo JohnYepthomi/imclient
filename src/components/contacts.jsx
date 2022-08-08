@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/contacts.css";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion/dist/framer-motion";
 
 export default function Contacts() {
   let user_roster = [
@@ -37,7 +38,14 @@ export default function Contacts() {
   ];
 
   return (
-    <div className="roster-container">
+    <motion.div
+      key="contacts-list"
+      initial={{ x: "100vw" }}
+      animate={{ x: 0 }}
+      exit={{ x: "-100vw" }}
+      // transition={{ ease: "linear" }}
+      className="roster-container"
+    >
       <ul className="roster-whitelist">
         {user_roster.map((user_contact, index) => {
           return (
@@ -80,6 +88,6 @@ export default function Contacts() {
           );
         })}
       </ul>
-    </div>
+    </motion.div>
   );
 }

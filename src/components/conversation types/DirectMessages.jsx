@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import container from "../../DI/di-container";
 import useLongPress from "../../hooks/long.press";
 import RemoveReactionModal from "./RemoveReactionModal";
+import { motion } from "framer-motion/dist/framer-motion";
 
 export default function DirectMessages({ senderjid }) {
   const messageInputRef = useRef();
@@ -134,7 +135,12 @@ export default function DirectMessages({ senderjid }) {
   }
 
   return (
-    <>
+    <motion.div
+      key="direct-messages"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <div className="message-header">
         <Link to="/">
           <div className="back-button">
@@ -343,6 +349,6 @@ export default function DirectMessages({ senderjid }) {
           </svg>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }

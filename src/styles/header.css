@@ -8,6 +8,35 @@
   width: 100%;
 }
 
+.menu-more-button {
+  position: absolute;
+  top: 5px;
+  width: 130px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-color: white;
+  box-shadow: -1px 1px 2px -1px gray;
+  font-size: 0.85rem;
+  border-radius: 2px;
+}
+
+.menu-more-button > div {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+  cursor: pointer;
+  /* border: 1px solid red; */
+}
+
+.menu-more-button > div:hover {
+  background-color: rgba(156, 151, 151, 0.205);
+}
+
 .more-svg-button {
   display: flex;
   align-items: center;

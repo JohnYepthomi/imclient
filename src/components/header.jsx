@@ -2,9 +2,12 @@ import React from "react";
 import "../styles/header.css";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import Menu from "./Menu";
 
 export default function Header() {
   const [activeTab, setActiveTab] = useState("Messages");
+  const [showMore, setShowMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState();
 
   const handelTabClick = (e) => {
     if (e.target.innerText === "CHATS") setActiveTab("Messages");
@@ -12,12 +15,28 @@ export default function Header() {
     if (e.target.innerText === "CONTACTS") setActiveTab("Contacts");
   };
 
-  useEffect(() => {
-    //
-  }, []);
+  function handleMoreClick(e) {
+    e.stopPropagation();
+    setShowMore(true);
+  }
+
+  function handleContainerClick(e) {
+    e.stopPropagation();
+    setShowMore(false);
+  }
+
+  // Get the name of the current page
+  // useEffect(() => {
+  //   let currentpage = window.location.href;
+  //   if (currentpage.includes("chats")) setCurrentPage("chats");
+  //   else if (currentPage.includes("contacts")) setCurrentPage("contacts");
+  //   else setCurrentPage("home");
+  // }, [window.location.href]);
+
+  let options = ["new group", "logout"];
 
   return (
-    <div className="main-header">
+    <div className="main-header" onClick={handleContainerClick}>
       <div className="branding">
         <div className="brand-name">
           <svg
@@ -34,7 +53,7 @@ export default function Header() {
             Asend<sup style={{ fontSize: "0.5rem", color: "wheat" }}>TM</sup>
           </div>
         </div>
-        <div className="more-svg-button">
+        <div className="more-svg-button" onClick={handleMoreClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -54,7 +73,7 @@ export default function Header() {
           active={activeTab === "Messages" ? "true" : "false"}
           onClick={handelTabClick}
         >
-          <Link to="/">
+          <Link to="/" state={{ from: currentPage }}>
             <div>CHATS</div>
           </Link>
         </div>
@@ -64,7 +83,7 @@ export default function Header() {
           active={activeTab === "Status" ? "true" : "false"}
           onClick={handelTabClick}
         >
-          <Link to="/status">
+          <Link to="/status" state={{ from: currentPage }}>
             <div>STATUS</div>
           </Link>
         </div>
@@ -74,11 +93,12 @@ export default function Header() {
           active={activeTab === "Contacts" ? "true" : "false"}
           onClick={handelTabClick}
         >
-          <Link to="/contacts">
+          <Link to="/contacts" state={{ from: currentPage }}>
             <div>CONTACTS</div>
           </Link>
         </div>
       </div>
+      {showMore && <Menu className="more-button" options={options} />}
     </div>
   );
 }

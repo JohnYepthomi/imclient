@@ -12,6 +12,7 @@ import store from "./store/store";
 import { Provider } from "react-redux";
 import { PrivateRoute } from "./auth/PrivateRouter";
 import ClientService from "./services/connection.service";
+import { AnimatePresence } from "framer-motion/dist/framer-motion";
 
 export default function App() {
   /* release resource*/
@@ -31,17 +32,22 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <Routes>
-        <Route exact path="/" element={<PrivateRoute />}>
-          <Route exact path="/" element={<Home />}>
-            <Route index={true} element={<MessagesList />} />
-            <Route path="status" element={<Status />} />
-            <Route path="contacts" element={<Contacts />} />
-            <Route path="conversation/:senderjid" element={<Conversation />} />
+      <AnimatePresence>
+        <Routes>
+          <Route exact path="/" element={<PrivateRoute />}>
+            <Route exact path="/" element={<Home />}>
+              <Route index={true} element={<MessagesList />} />
+              <Route path="status" element={<Status />} />
+              <Route path="contacts" element={<Contacts />} />
+              <Route
+                path="conversation/:senderjid"
+                element={<Conversation />}
+              />
+            </Route>
           </Route>
-        </Route>
-        <Route path="login" element={<Login />} />
-      </Routes>
+          <Route path="login" element={<Login />} />
+        </Routes>
+      </AnimatePresence>
     </Provider>
   );
 }
