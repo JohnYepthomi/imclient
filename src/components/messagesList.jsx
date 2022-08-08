@@ -141,10 +141,10 @@ export default function MessagesList() {
         animate={{ scale: 1 }}
         transition={{
           delay: 0.32,
-          type: "spring",
-          damping: 6,
-          stiffness: 100,
-          restDelta: 0.002,
+          // type: "spring",
+          // damping: 6,
+          // stiffness: 100,
+          // restDelta: 0.002,
         }}
         className="new-message-button"
       >
