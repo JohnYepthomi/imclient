@@ -3,7 +3,7 @@ import "../styles/contacts.css";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion/dist/framer-motion";
 
-export default function Contacts() {
+export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
   let user_roster = [
     {
       jid: "samuel@localhost",
@@ -38,7 +38,15 @@ export default function Contacts() {
   ];
 
   return (
-    <motion.div key="contact-list" initial={{ x: "-100vw" }} animate={{ x: 0 }}>
+    <motion.div
+      // key="contact-list"
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      style={pageStyle}
+    >
       <ul className="roster-whitelist">
         {user_roster.map((user_contact, index) => {
           return (

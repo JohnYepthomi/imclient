@@ -113,15 +113,6 @@ export default function DirectMessages({ senderjid }) {
     }
   }
 
-  useEffect(() => {
-    if (document.contains(document.querySelector(".emoji-container"))) {
-      //Hide emoji selector UI
-      document.querySelector(".emoji-container").style.display = "none";
-    }
-    scrollToLastMessage();
-    console.log("DirectMessages useEffect");
-  }, [sendermessages]);
-
   async function handleSelectEmoji(e) {
     let emoji = e.target.innerText;
     let reactionId = e.target.id;
@@ -134,12 +125,19 @@ export default function DirectMessages({ senderjid }) {
     e.target.parentElement.style.display = "none";
   }
 
+  useEffect(() => {
+    if (document.contains(document.querySelector(".emoji-container"))) {
+      //Hide emoji selector UI
+      document.querySelector(".emoji-container").style.display = "none";
+    }
+    scrollToLastMessage();
+    console.log("DirectMessages useEffect");
+  }, [sendermessages]);
+
   return (
     <motion.div
       key="direct-messages"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      style={{ position: "absolute", width: "100%" }}
     >
       <div className="message-header">
         <Link to="/">
@@ -186,10 +184,9 @@ export default function DirectMessages({ senderjid }) {
             let bookmark = getBookmark(index, sendermessages, senderjid);
 
             return (
-              <>
+              <React.Fragment key={index}>
                 <div
                   className={msg.isClientMessage ? "self" : "from"}
-                  key={index}
                   data-reaction={
                     msg.reactions && msg.reactions.length > 0 ? true : false
                   }
@@ -304,7 +301,9 @@ export default function DirectMessages({ senderjid }) {
                         if (idx < 3)
                           return (
                             <>
-                              <div className="reaction">{reaction.emoji}</div>
+                              <div className="reaction" key={idx}>
+                                {reaction.emoji}
+                              </div>
                             </>
                           );
                       })}
@@ -312,7 +311,7 @@ export default function DirectMessages({ senderjid }) {
                   )}
                 </div>
                 {bookmark && <div className="date-bookmark">{bookmark}</div>}
-              </>
+              </React.Fragment>
             );
           })}
       </div>
