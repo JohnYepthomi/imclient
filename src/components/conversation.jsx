@@ -11,11 +11,21 @@ export default function Chat({ pageVariants, pageTransition, pageStyle }) {
   const source = searchParams.get("source");
   pageStyle.marginTop = "0px";
   pageStyle.zIndex = "2";
-  pageVariants.out = {
-    x: "-100vw",
-    scale: 0,
-    opacity: 0,
+
+  pageVariants.initial = {
+    x: "100vw",
   };
+
+  pageVariants.in = {
+    x: 0,
+  };
+
+  pageVariants.out = {
+    x: "100vw",
+  };
+
+  pageTransition.ease = "easeInOut";
+  pageTransition.duration = "0.3";
 
   // useEffect(() => {
 

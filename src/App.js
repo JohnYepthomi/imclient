@@ -19,25 +19,25 @@ export default function App() {
   let pageSlideVariants = {
     initial: {
       x: "-100vw",
-      scale: 0.5,
+      // scale: 0.5,
       opacity: 0,
     },
     in: {
       x: 0,
-      scale: 1,
+      // scale: 1,
       opacity: 1,
     },
     out: {
       x: "100vw",
-      scale: 1.2,
+      // scale: 1.2,
       opacity: 0,
     },
   };
 
   const pageTransition = {
     type: "tween",
-    ease: "anticipate",
-    duration: 0.7,
+    ease: "easeInOut",
+    duration: 0.3,
   };
 
   const pageStyle = {

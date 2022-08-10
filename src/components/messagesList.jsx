@@ -14,7 +14,7 @@ export default function MessagesList({
   const newMessage = useSelector((state) => state.messages.lastMessage);
   const [senderJid, setSenderJid] = useState("samuel@localhost");
   const navigate = useNavigate();
-
+  const [noTransition, setNoTransition] = useState(false);
   function getDayFromTimestamp(timestamp) {
     const m_d_y = timestamp.split(" ")[0].split("/"); //temporary dummy timestamp; needs changes when using real data;
     const messageDate = new Date(m_d_y);
@@ -33,6 +33,7 @@ export default function MessagesList({
 
   function handleChatClick(senderjid) {
     setSenderJid(senderjid);
+    setNoTransition(true);
     navigate(`conversation/${senderjid.split("/")[0]}?source=chats`);
   }
 
@@ -72,6 +73,8 @@ export default function MessagesList({
     setMessages(msgs);
   }, []);
 
+  let noPageTransition = {};
+
   return (
     <motion.div
       // key="message-list"
@@ -79,8 +82,9 @@ export default function MessagesList({
       animate="in"
       exit="out"
       variants={pageVariants}
-      transition={pageTransition}
+      transition={noTransition ? noPageTransition : pageTransition}
       style={pageStyle}
+      // drag="x"
     >
       <div className="messages-container">
         <ul className="messages-list">
