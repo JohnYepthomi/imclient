@@ -68,7 +68,7 @@ export default function App() {
   return (
     <div style={{ overflowX: "hidden", position: "relative", height: "100vh" }}>
       <Provider store={store}>
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           <Routes location={location} key={location.pathname}>
             <Route exact path="/" element={<PrivateRoute />}>
               <Route exact path="/" element={<Home />}>
