@@ -3,6 +3,7 @@ ul {
 }
 
 .messages-container {
+  height: 100%;
 }
 
 .no-messages {
@@ -26,7 +27,7 @@ ul {
 }
 
 .new-message-button {
-  position: absolute;
+  position: fixed;
   bottom: 25px;
   right: 25px;
   width: 40px;

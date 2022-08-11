@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import container from "../../DI/di-container";
 import useLongPress from "../../hooks/long.press";
 import RemoveReactionModal from "./RemoveReactionModal";
-import { motion } from "framer-motion/dist/framer-motion";
 
 export default function DirectMessages({ senderjid }) {
   const messageInputRef = useRef();

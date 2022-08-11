@@ -1,7 +1,5 @@
 .main-header {
-  position: absolute;
-  width: 100%;
-  z-index: 0;
+  height: 80px;
 }
 
 .branding {

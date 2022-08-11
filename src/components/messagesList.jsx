@@ -5,14 +5,9 @@ import { useSelector } from "react-redux";
 import "../styles/messagesList.css";
 import { motion } from "framer-motion/dist/framer-motion";
 
-export default function MessagesList({
-  pageVariants,
-  pageTransition,
-  pageStyle,
-}) {
+export default function MessagesList() {
   const [messages, setMessages] = useState();
   const newMessage = useSelector((state) => state.messages.lastMessage);
-  const [senderJid, setSenderJid] = useState("samuel@localhost");
   const navigate = useNavigate();
 
   function getDayFromTimestamp(timestamp) {
@@ -32,7 +27,6 @@ export default function MessagesList({
   }
 
   function handleChatClick(senderjid) {
-    setSenderJid(senderjid);
     navigate(`conversation/${senderjid.split("/")[0]}?source=chats`);
   }
 
@@ -67,21 +61,12 @@ export default function MessagesList({
         avatar: "https://picsum.photos/100",
       },
     ];
-
+    console.log("messageList useEffect");
     setMessages(msgs);
   }, []);
 
   return (
-    <motion.div
-      // key="message-list"
-      initial="initial"
-      animate="in"
-      exit="out"
-      variants={pageVariants}
-      transition={pageTransition}
-      style={pageStyle}
-      // drag="x"
-    >
+    <React.Fragment>
       <div className="messages-container">
         <ul className="messages-list">
           {messages &&
@@ -177,6 +162,6 @@ export default function MessagesList({
           </svg>
         </Link>
       </motion.div>
-    </motion.div>
+    </React.Fragment>
   );
 }
