@@ -10,6 +10,7 @@ export default function Chat({ pageVariants, pageTransition, pageStyle }) {
   const { senderjid } = useParams();
   const source = searchParams.get("source");
 
+  pageStyle.height = "";
   pageStyle.zIndex = "2";
   pageStyle.marginTop = "0px";
   pageTransition.ease = "easeInOut";
