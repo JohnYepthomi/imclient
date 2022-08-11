@@ -9,27 +9,23 @@ export default function Chat({ pageVariants, pageTransition, pageStyle }) {
   let [searchParams] = useSearchParams();
   const { senderjid } = useParams();
   const source = searchParams.get("source");
-  pageStyle.marginTop = "0px";
+
   pageStyle.zIndex = "2";
-
-  pageVariants.initial = {
-    x: "100vw",
-  };
-
-  pageVariants.in = {
-    x: 0,
-  };
-
-  pageVariants.out = {
-    x: "100vw",
-  };
-
+  pageStyle.marginTop = "0px";
   pageTransition.ease = "easeInOut";
   pageTransition.duration = "0.3";
-
-  // useEffect(() => {
-
-  // }, []);
+  pageVariants.initial = {
+    translateX: "100vw",
+  };
+  pageVariants.in = {
+    translateX: 0,
+    transitionEnd: {
+      translateX: 0,
+    },
+  };
+  pageVariants.out = {
+    translateX: "100vw",
+  };
 
   return (
     <motion.div

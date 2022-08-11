@@ -18,17 +18,17 @@ import { AnimatePresence } from "framer-motion/dist/framer-motion";
 export default function App() {
   let pageSlideVariants = {
     initial: {
-      x: "-100vw",
+      translateX: "-100vw",
       // scale: 0.5,
       opacity: 0,
     },
     in: {
-      x: 0,
+      translateX: 0,
       // scale: 1,
       opacity: 1,
     },
     out: {
-      x: "100vw",
+      translateX: "100vw",
       // scale: 1.2,
       opacity: 0,
     },
