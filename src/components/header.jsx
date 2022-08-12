@@ -1,18 +1,23 @@
 import React from "react";
 import "../styles/header.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
+import { useDispatch } from "react-redux";
+import { setView } from "../features/floatingButtonSlice";
 
 export default function Header() {
   const [activeTab, setActiveTab] = useState("Messages");
   const [showMore, setShowMore] = useState(false);
   const [currentPage, setCurrentPage] = useState();
+  const dispatch = useDispatch();
 
-  const handelTabClick = (e) => {
-    if (e.target.innerText === "CHATS") setActiveTab("Messages");
-    if (e.target.innerText === "STATUS") setActiveTab("Status");
-    if (e.target.innerText === "CONTACTS") setActiveTab("Contacts");
+  const handelTabClick = (viewName) => {
+    if (viewName === "chats") setActiveTab("Messages");
+    if (viewName === "status") setActiveTab("Status");
+    if (viewName === "contacts") setActiveTab("Contacts");
+
+    dispatch(setView(viewName));
   };
 
   function handleMoreClick(e) {
@@ -24,14 +29,6 @@ export default function Header() {
     e.stopPropagation();
     setShowMore(false);
   }
-
-  // Get the name of the current page
-  // useEffect(() => {
-  //   let currentpage = window.location.href;
-  //   if (currentpage.includes("chats")) setCurrentPage("chats");
-  //   else if (currentPage.includes("contacts")) setCurrentPage("contacts");
-  //   else setCurrentPage("home");
-  // }, [window.location.href]);
 
   let options = ["new group", "logout"];
 
@@ -70,10 +67,10 @@ export default function Header() {
         <div
           className="menu-item"
           draggable={false}
-          active={activeTab === "Messages" ? "true" : "false"}
-          onClick={handelTabClick}
+          active={activeTab === "chats" ? "true" : "false"}
+          onClick={() => handelTabClick("chats")}
         >
-          <Link to="/" state={{ from: currentPage }}>
+          <Link to="/">
             <div>CHATS</div>
           </Link>
         </div>
@@ -81,9 +78,9 @@ export default function Header() {
         <div
           className="menu-item"
           active={activeTab === "Status" ? "true" : "false"}
-          onClick={handelTabClick}
+          onClick={() => handelTabClick("status")}
         >
-          <Link to="/status" state={{ from: currentPage }}>
+          <Link to="/status">
             <div>STATUS</div>
           </Link>
         </div>
@@ -91,9 +88,9 @@ export default function Header() {
         <div
           className="menu-item"
           active={activeTab === "Contacts" ? "true" : "false"}
-          onClick={handelTabClick}
+          onClick={() => handelTabClick("contacts")}
         >
-          <Link to="/contacts" state={{ from: currentPage }}>
+          <Link to="/contacts">
             <div>CONTACTS</div>
           </Link>
         </div>

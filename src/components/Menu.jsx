@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { enableSelection } from "../features/participantsSlice";
+import { setView } from "../features/floatingButtonSlice";
 
 export default function Menu({ className, options }) {
   const navigate = useNavigate();
@@ -13,8 +14,9 @@ export default function Menu({ className, options }) {
   }
 
   function handleNewGroup() {
-    navigate("/contacts");
     dispatch(enableSelection());
+    dispatch(setView("group-setup"));
+    navigate("/contacts");
   }
 
   return (

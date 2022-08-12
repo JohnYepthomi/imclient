@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/contacts.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion/dist/framer-motion";
+import {
+  disableSelection,
+  setSelectionStart,
+  setSelectionEnd,
+} from "../features/participantsSlice";
+import { setView } from "../features/floatingButtonSlice";
 
 export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
   let user_roster = [
@@ -39,17 +45,26 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
   ];
   const isSelectionMode = useSelector((state) => state.participants.selection);
   const [selectedContacts, setSelectedContacts] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleContactClick(contactjid) {
     if (!selectedContacts.includes(contactjid))
       setSelectedContacts((state) => [...state, contactjid]);
     else
       setSelectedContacts((state) => {
-        return state.map((contact) => {
-          if (contact !== contactjid) return contact;
-        });
+        return state.filter((contact) => contact !== contactjid);
       });
+
+    dispatch(setSelectionStart());
   }
+
+  window.onpopstate = () => {
+    dispatch(disableSelection());
+    navigate("/");
+    dispatch(setView("chats"));
+    dispatch(setSelectionEnd());
+  };
 
   if (isSelectionMode)
     return (

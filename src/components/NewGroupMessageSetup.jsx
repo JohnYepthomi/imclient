@@ -2,19 +2,15 @@ import React from "react";
 import "../styles/NewGroupMessageSetup.css";
 import { motion } from "framer-motion/dist/framer-motion";
 
-export default function NewGroupMessageSetup({
-  pageVariants,
-  pageTransition,
-  pageStyle,
-}) {
+export default function NewGroupMessageSetup() {
   return (
     <motion.div
       initial="initial"
       animate="in"
       exit="out"
-      variants={pageVariants}
-      transition={pageTransition}
-      style={pageStyle}
+      // variants={pageVariants}
+      // transition={pageTransition}
+      // style={pageStyle}
     >
       <div className="group-setup-container">
         <div className="new-group-name">

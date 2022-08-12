@@ -8,7 +8,7 @@
   justify-content: space-between;
   padding: 15px;
   padding-bottom: 5px;
-  background-color: var(--brand-clr-1);
+  background-color: #407a5c;
   width: 100%;
 }
 
@@ -105,7 +105,7 @@
   justify-content: space-around;
   font-size: var(--fs);
   color: var(--brand-clr-5);
-  background-color: var(--brand-clr-1);
+  background-color: #407a5c;
 }
 
 .menu-item {
