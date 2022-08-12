@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, useAnimationControls } from "framer-motion/dist/framer-motion";
 import { useSelector } from "react-redux";
 
@@ -8,8 +8,12 @@ export default function FloatingButton() {
   const animControl = useAnimationControls();
   const currentView = useSelector((state) => state.floatingButton.currentView);
   const isSelectionStarted = useSelector(
-    (state) => state.participants.selectionStarted
+    (state) => state.groupSetup.selectionStarted
   );
+  const isSelectionComplete = useSelector(
+    (state) => state.groupSetup.selectionComplete
+  );
+  const navigate = useNavigate();
 
   let pageVariants = {
     initial: {
@@ -130,6 +134,48 @@ export default function FloatingButton() {
     );
   }
 
+  function handleNavToGroupSetup() {
+    navigate("/groupsetup");
+  }
+
+  function handleNavToHome() {
+    navigate("/");
+  }
+
+  function ContactSelectionButton() {
+    useEffect(() => {
+      const runAnim = async () => {
+        await animControl.set({ opacity: 1, translateX: "-20px" });
+        await animControl.start({ opacity: 1, translateX: 0 }, pageTransition);
+      };
+
+      runAnim();
+    }, []);
+
+    if (!isSelectionStarted) {
+      return <></>;
+    } else
+      return (
+        <div className="new-message-button" onClick={handleNavToGroupSetup}>
+          <motion.svg
+            variants={pageVariants}
+            animate={animControl}
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="white"
+            className="bi bi-arrow-right"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule="evenodd"
+              d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+            />
+          </motion.svg>
+        </div>
+      );
+  }
+
   function GroupSetupButton() {
     useEffect(() => {
       const runAnim = async () => {
@@ -140,34 +186,28 @@ export default function FloatingButton() {
       runAnim();
     }, []);
 
-    if (!isSelectionStarted) {
-      return <div></div>;
-    } else
-      return (
-        <div className="new-message-button">
-          <Link to="/contacts">
-            <motion.svg
-              variants={pageVariants}
-              animate={animControl}
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="white"
-              className="bi bi-arrow-right"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fillRule="evenodd"
-                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
-              />
-            </motion.svg>
-          </Link>
-        </div>
-      );
+    return (
+      <div className="new-message-button" onClick={handleNavToHome}>
+        <motion.svg
+          variants={pageVariants}
+          animate={animControl}
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="white"
+          class="bi bi-check-lg"
+          viewBox="0 0 16 16"
+        >
+          <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
+        </motion.svg>
+      </div>
+    );
   }
 
   if (currentView == "chats") return <MessageButton />;
   else if (currentView === "status") return <StatusButton />;
   else if (currentView === "contacts") return <ContactsButton />;
+  else if (currentView === "contact-selection")
+    return <ContactSelectionButton />;
   else if (currentView === "group-setup") return <GroupSetupButton />;
 }

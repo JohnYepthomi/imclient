@@ -3,20 +3,15 @@ import "../styles/header.css";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setView } from "../features/floatingButtonSlice";
 
 export default function Header() {
-  const [activeTab, setActiveTab] = useState("Messages");
   const [showMore, setShowMore] = useState(false);
-  const [currentPage, setCurrentPage] = useState();
+  const currentView = useSelector((state) => state.floatingButton.currentView);
   const dispatch = useDispatch();
 
   const handelTabClick = (viewName) => {
-    if (viewName === "chats") setActiveTab("Messages");
-    if (viewName === "status") setActiveTab("Status");
-    if (viewName === "contacts") setActiveTab("Contacts");
-
     dispatch(setView(viewName));
   };
 
@@ -66,8 +61,7 @@ export default function Header() {
       <div className="menu">
         <div
           className="menu-item"
-          draggable={false}
-          active={activeTab === "chats" ? "true" : "false"}
+          active={currentView === "chats" ? "true" : "false"}
           onClick={() => handelTabClick("chats")}
         >
           <Link to="/">
@@ -77,7 +71,7 @@ export default function Header() {
 
         <div
           className="menu-item"
-          active={activeTab === "Status" ? "true" : "false"}
+          active={currentView === "status" ? "true" : "false"}
           onClick={() => handelTabClick("status")}
         >
           <Link to="/status">
@@ -87,7 +81,7 @@ export default function Header() {
 
         <div
           className="menu-item"
-          active={activeTab === "Contacts" ? "true" : "false"}
+          active={currentView === "contacts" ? "true" : "false"}
           onClick={() => handelTabClick("contacts")}
         >
           <Link to="/contacts">

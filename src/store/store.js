@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import messageReducer from "../features/messageSlice";
 import contactsReducer from "../features/contactsSlice";
 import authReducer from "../features/authSlice";
-import participantsSlice from "../features/participantsSlice";
+import groupSetupSlice from "../features/groupSetupSlice";
 import floatingButtonSlice from "../features/floatingButtonSlice";
 
 export default configureStore({
@@ -10,7 +10,7 @@ export default configureStore({
     auth: authReducer,
     messages: messageReducer,
     contacts: contactsReducer,
-    participants: participantsSlice,
+    groupSetup: groupSetupSlice,
     floatingButton: floatingButtonSlice,
   },
 });

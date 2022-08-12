@@ -134,7 +134,7 @@ export default function DirectMessages({ senderjid }) {
   }, [sendermessages]);
 
   return (
-    <React.Fragment>
+    <div style={{ position: "absolute", width: "100%", top: 0, zIndex: 9999 }}>
       <div className="message-header">
         <Link to="/">
           <div className="back-button">
@@ -344,6 +344,6 @@ export default function DirectMessages({ senderjid }) {
           </svg>
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 }

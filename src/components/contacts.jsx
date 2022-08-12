@@ -4,10 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion/dist/framer-motion";
 import {
-  disableSelection,
+  setSelectionComplete,
+  updateSelection,
+  disableEditMode,
   setSelectionStart,
   setSelectionEnd,
-} from "../features/participantsSlice";
+} from "../features/groupSetupSlice";
 import { setView } from "../features/floatingButtonSlice";
 
 export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
@@ -43,30 +45,52 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
       avatar: "https://picsum.photos/200",
     },
   ];
-  const isSelectionMode = useSelector((state) => state.participants.selection);
+  const isEditMode = useSelector((state) => state.groupSetup.editMode);
+  const isSelectionStarted = useSelector(
+    (state) => state.groupSetup.selectionStarted
+  );
   const [selectedContacts, setSelectedContacts] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   function handleContactClick(contactjid) {
+    if (!isSelectionStarted) dispatch(setSelectionStart());
+
     if (!selectedContacts.includes(contactjid))
       setSelectedContacts((state) => [...state, contactjid]);
     else
       setSelectedContacts((state) => {
         return state.filter((contact) => contact !== contactjid);
       });
-
-    dispatch(setSelectionStart());
   }
 
+  function unMountCleanUp() {
+    if (isEditMode) {
+      dispatch(disableEditMode());
+      dispatch(setSelectionEnd());
+      dispatch(setSelectionComplete());
+    }
+  }
+
+  /* Back/Forward Keys */
   window.onpopstate = () => {
-    dispatch(disableSelection());
-    navigate("/");
-    dispatch(setView("chats"));
-    dispatch(setSelectionEnd());
+    unMountCleanUp();
   };
 
-  if (isSelectionMode)
+  /* local state */
+  useEffect(() => {
+    if (isEditMode) {
+      dispatch(updateSelection(selectedContacts));
+      if (selectedContacts.length === 0) dispatch(setSelectionEnd());
+    }
+  }, [selectedContacts]);
+
+  /* CleanUp on unmount */
+  useEffect(() => {
+    return () => unMountCleanUp();
+  }, []);
+
+  if (isEditMode)
     return (
       <React.Fragment>
         <ul
