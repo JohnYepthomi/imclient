@@ -203,7 +203,7 @@ export default function FloatingButton() {
       </div>
     );
   }
-
+  console.log({ currentView });
   if (currentView == "chats") return <MessageButton />;
   else if (currentView === "status") return <StatusButton />;
   else if (currentView === "contacts") return <ContactsButton />;

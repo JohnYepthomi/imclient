@@ -54,8 +54,6 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
   const navigate = useNavigate();
 
   function handleContactClick(contactjid) {
-    if (!isSelectionStarted) dispatch(setSelectionStart());
-
     if (!selectedContacts.includes(contactjid))
       setSelectedContacts((state) => [...state, contactjid]);
     else
@@ -64,22 +62,17 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
       });
   }
 
-  function unMountCleanUp() {
-    if (isEditMode) {
-      dispatch(disableEditMode());
-      dispatch(setSelectionEnd());
-      dispatch(setSelectionComplete());
-    }
+  function cleanupOnUnmount() {
+    console.log("unMountCleanup() called");
+    dispatch(disableEditMode());
+    dispatch(setSelectionEnd());
+    dispatch(setSelectionComplete());
   }
 
-  /* Back/Forward Keys */
-  window.onpopstate = () => {
-    unMountCleanUp();
-  };
-
-  /* local state */
+  /* Start/Stop Selection */
   useEffect(() => {
     if (isEditMode) {
+      if (!isSelectionStarted) dispatch(setSelectionStart());
       dispatch(updateSelection(selectedContacts));
       if (selectedContacts.length === 0) dispatch(setSelectionEnd());
     }
@@ -87,7 +80,7 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
 
   /* CleanUp on unmount */
   useEffect(() => {
-    return () => unMountCleanUp();
+    return () => cleanupOnUnmount();
   }, []);
 
   if (isEditMode)
@@ -108,7 +101,7 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
             style={{
               height: "40px",
               width: "100%",
-              backgroundColor: "#4f854f",
+              backgroundColor: "#407a5c",
               padding: "10px",
               color: "white",
             }}

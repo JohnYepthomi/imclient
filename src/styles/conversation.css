@@ -16,7 +16,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--padding-md);
-  background-color: var(--brand-clr-1);
+  background-color: #407a5c;
   z-index: 2;
 }
 

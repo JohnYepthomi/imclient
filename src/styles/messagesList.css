@@ -39,6 +39,7 @@ ul {
   border-radius: 50%;
   box-shadow: 0px 3px 5px -3px rgb(168, 166, 166);
   cursor: pointer;
+  z-index: 2;
 }
 
 .new-message-button svg {
