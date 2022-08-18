@@ -105,9 +105,9 @@ export default class StanzaService {
     await this.send(stanza);
   }
 
-  async sendReaction({ reactionId, reactedby, jid, emoji }) {
+  async sendReaction({ reactionId, reactedby, senderjid, emoji }) {
     this._dispatcher.actionsDispatcher().updateReaction({
-      jid,
+      senderjid,
       reactionId,
       reactedby,
       emoji,
@@ -117,7 +117,7 @@ export default class StanzaService {
       "message",
       {
         type: "chat",
-        to: jid,
+        to: senderjid,
         id: this.generateId(5),
       },
       this._xml(

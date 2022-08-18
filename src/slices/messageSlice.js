@@ -337,15 +337,16 @@ export const messageSlice = createSlice({
         Object.values(user).forEach((messages) => {
           messages.forEach((message, messageidx) => {
             if (message.id === reactionId) {
-              message.reactions.forEach((reaction, reactionidx) => {
-                reaction.reactors.forEach((reactor) => {
-                  if (removedby === reactor) {
-                    state.directMessages[usersIdx][sender][
-                      messageidx
-                    ].reactions.splice(reactionidx, 1);
-                  }
+              message.reactions &&
+                message.reactions.forEach((reaction, reactionidx) => {
+                  reaction.reactors.forEach((reactor) => {
+                    if (removedby === reactor) {
+                      state.directMessages[usersIdx][sender][
+                        messageidx
+                      ].reactions.splice(reactionidx, 1);
+                    }
+                  });
                 });
-              });
             }
           });
         });
