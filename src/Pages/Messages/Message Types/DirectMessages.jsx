@@ -11,7 +11,10 @@ export default function DirectMessages({ senderjid }) {
   const [scroll, setScroll] = useState(false);
 
   return (
-    <div style={{ position: "absolute", width: "100%", top: 0, zIndex: 9999 }}>
+    <div
+      className="direct-message-container"
+      style={{ position: "absolute", width: "100%", top: 0, zIndex: 9999 }}
+    >
       <MessageHeader type="chat" senderId={senderjid} />
       <ChatMessageView
         setShowModal={setShowModal}

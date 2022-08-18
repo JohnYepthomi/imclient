@@ -78,8 +78,9 @@ export default function ChatMessageView({
               >
                 <EmojiSelector senderjid={senderId} message={msg} />
 
-                <div className="chat">{msg.body}</div>
-
+                <div style={{ marginBottom: "0px" }} className="chat">
+                  {msg.body}
+                </div>
                 <Ticks message={msg} />
 
                 <Reactions
