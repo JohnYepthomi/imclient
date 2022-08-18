@@ -1,18 +1,19 @@
-import React from "react";
-import "../styles/header.css";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Menu from "./Menu";
+import React from "react";
+import { setCurrentPage } from "../slices/floatingButtonSlice";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setView } from "../features/floatingButtonSlice";
+import "../styles/header.css";
 
 export default function Header() {
   const [showMore, setShowMore] = useState(false);
-  const currentView = useSelector((state) => state.floatingButton.currentView);
+  const currentPage = useSelector((state) => state.floatingButton.currentPage);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const handelTabClick = (viewName) => {
-    dispatch(setView(viewName));
+    dispatch(setCurrentPage(viewName));
   };
 
   function handleMoreClick(e) {
@@ -24,6 +25,13 @@ export default function Header() {
     e.stopPropagation();
     setShowMore(false);
   }
+
+  useEffect(() => {
+    let path = location.pathname;
+    let pageName =
+      path === "/" ? "chats" : location.pathname.replace(/[^\w\s]/gi, "");
+    dispatch(setCurrentPage(pageName));
+  }, [location]);
 
   let options = ["new group", "logout"];
 
@@ -45,6 +53,7 @@ export default function Header() {
             Asend<sup style={{ fontSize: "0.5rem", color: "wheat" }}>TM</sup>
           </div>
         </div>
+
         <div className="more-svg-button" onClick={handleMoreClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,10 +67,11 @@ export default function Header() {
           </svg>
         </div>
       </div>
+
       <div className="menu">
         <div
           className="menu-item"
-          active={currentView === "chats" ? "true" : "false"}
+          active={currentPage === "chats" ? "true" : "false"}
           onClick={() => handelTabClick("chats")}
         >
           <Link to="/">
@@ -71,7 +81,7 @@ export default function Header() {
 
         <div
           className="menu-item"
-          active={currentView === "status" ? "true" : "false"}
+          active={currentPage === "status" ? "true" : "false"}
           onClick={() => handelTabClick("status")}
         >
           <Link to="/status">
@@ -81,7 +91,7 @@ export default function Header() {
 
         <div
           className="menu-item"
-          active={currentView === "contacts" ? "true" : "false"}
+          active={currentPage === "contacts" ? "true" : "false"}
           onClick={() => handelTabClick("contacts")}
         >
           <Link to="/contacts">
@@ -89,6 +99,7 @@ export default function Header() {
           </Link>
         </div>
       </div>
+
       {showMore && <Menu className="more-button" options={options} />}
     </div>
   );

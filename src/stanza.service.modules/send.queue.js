@@ -68,17 +68,24 @@ export default class SendQueue {
     this._logger.info("sending message");
 
     try {
-      if (this.mq[0].attrs.type === "chat")
+      let messageId = this.mq[0].attrs.id;
+
+      if (this.mq[0].attrs.type === "chat") {
         this._dispatcher
           .actionsDispatcher()
-          .updateSentMessage({ id: this.mq[0].attrs.id });
+          .updateSentMessage({ id: messageId });
+      } else if (this.mq[0].attrs.type === "groupchat") {
+        this._dispatcher
+          .actionsDispatcher()
+          .updateGroupSentMessage({ id: messageId });
+      }
+
       await this._conn.send(this.mq[0]);
       this.removeHead();
       if (this.mq.length > 0) this.tryAgain();
     } catch (e) {
       this._logger.info(e);
       this.tryAgain();
-      return;
     }
   }
 

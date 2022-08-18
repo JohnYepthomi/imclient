@@ -1,12 +1,12 @@
 import React from "react";
-import "../../styles/removereactionmodal.css";
-import container from "../../DI/di-container";
-import { useEffect, useState } from "react";
+import container from "../../../DI/di-container";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import "./removereactionmodal.css";
 
 export default function RemoveReactionModal(props) {
   let reactionId = props.reactionInfo.reactionId;
-  let senderjid = props.senderjid;
+  let senderjid = props.senderId;
   let directMessages = useSelector((state) => state.messages.directMessages);
   const [selfReaction, setSelfReaction] = useState();
   const [senderReactions, setSenderReactions] = useState([]);

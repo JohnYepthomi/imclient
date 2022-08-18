@@ -1,6 +1,8 @@
 {
-    "editor.tokenColorCustomizations": {
-        "comments": "",
-        "textMateRules": []
-    }
+  "editor.tokenColorCustomizations": {
+    "textMateRules": []
+  },
+  "editor.fontFamily": "Dank Mono",
+  "editor.fontSize": 13.7,
+  "editor.renderWhitespace": "boundary"
 }

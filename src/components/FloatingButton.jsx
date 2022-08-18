@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion, useAnimationControls } from "framer-motion/dist/framer-motion";
+import React from "react";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { setRequestSubmitted } from "../slices/groupSetupSlice";
+import { motion, useAnimationControls } from "framer-motion/dist/framer-motion";
 
 export default function FloatingButton() {
-  const [currentPage, setCurrentPage] = useState();
   const animControl = useAnimationControls();
-  const currentView = useSelector((state) => state.floatingButton.currentView);
-  const isSelectionStarted = useSelector(
-    (state) => state.groupSetup.selectionStarted
-  );
-  const isSelectionComplete = useSelector(
-    (state) => state.groupSetup.selectionComplete
-  );
+  const dispatch = useDispatch();
+  const currentPage = useSelector((state) => state.floatingButton.currentPage);
+
   const navigate = useNavigate();
 
   let pageVariants = {
@@ -143,6 +141,10 @@ export default function FloatingButton() {
   }
 
   function ContactSelectionButton() {
+    const contactSelected = useSelector(
+      (state) => state.groupSetup.contactSelected
+    );
+
     useEffect(() => {
       const runAnim = async () => {
         await animControl.set({ opacity: 1, translateX: "-20px" });
@@ -152,7 +154,7 @@ export default function FloatingButton() {
       runAnim();
     }, []);
 
-    if (!isSelectionStarted) {
+    if (!contactSelected) {
       return <></>;
     } else
       return (
@@ -187,7 +189,12 @@ export default function FloatingButton() {
     }, []);
 
     return (
-      <div className="new-message-button" onClick={handleNavToHome}>
+      <div
+        className="new-message-button"
+        onClick={() => {
+          dispatch(setRequestSubmitted(true));
+        }}
+      >
         <motion.svg
           variants={pageVariants}
           animate={animControl}
@@ -203,11 +210,10 @@ export default function FloatingButton() {
       </div>
     );
   }
-  console.log({ currentView });
-  if (currentView == "chats") return <MessageButton />;
-  else if (currentView === "status") return <StatusButton />;
-  else if (currentView === "contacts") return <ContactsButton />;
-  else if (currentView === "contact-selection")
-    return <ContactSelectionButton />;
-  else if (currentView === "group-setup") return <GroupSetupButton />;
+
+  if (currentPage == "chats") return <MessageButton />;
+  else if (currentPage === "status") return <StatusButton />;
+  else if (currentPage === "contacts") return <ContactsButton />;
+  else if (currentPage === "select_contacts") return <ContactSelectionButton />;
+  else if (currentPage === "groupsetup") return <GroupSetupButton />;
 }

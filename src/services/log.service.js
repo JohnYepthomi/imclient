@@ -1,5 +1,5 @@
 export function LogService(scope, color) {
-  //const logService = { info: () => {}, error: () => {} };
+  // const logService = { info: () => {}, error: () => {} };
   const logService = {
     info: (message) =>
       console.log(

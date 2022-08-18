@@ -1,8 +1,15 @@
+import store from "../store/store";
 import container from "./di-container";
-import { LogService } from "../services/log.service";
-import ConnectionService from "../services/connection.service";
-import { client, xml } from "@xmpp/client";
+import XepModule from "../stanza.service.modules/xep.mods";
+import SendQueue from "../stanza.service.modules/send.queue";
+import UserService from "../services/user.service";
+import StanzaService from "../services/stanza.service";
 import DispatcherService from "../services/dispatcher.service";
+import ConnectionService from "../services/connection.service";
+import incomingStanzaHandler from "../stanza.service.modules/incoming.stanza.handler";
+import { LogService } from "../services/log.service";
+import { client, xml } from "@xmpp/client";
+import { setGroupCreated } from "../slices/groupSetupSlice";
 import {
   newDirectMessage,
   updateLastMessage,
@@ -10,13 +17,8 @@ import {
   updateSentMessage,
   updateReaction,
   removeReaction,
-} from "../features/messageSlice";
-import store from "../store/store";
-import incomingStanzaHandler from "../stanza.service.modules/incoming.stanza.handler";
-import StanzaService from "../services/stanza.service";
-import SendQueue from "../stanza.service.modules/send.queue";
-import XepModule from "../stanza.service.modules/xep.mods";
-import UserService from "../services/user.service";
+  newGroupMessage,
+} from "../slices/messageSlice";
 
 export default async function diSetup(connectionInfo) {
   window.xmlBuilder = xml;
@@ -44,6 +46,8 @@ export default async function diSetup(connectionInfo) {
     { updateSentMessage },
     { updateReaction },
     { removeReaction },
+    { setGroupCreated },
+    { newGroupMessage },
   ];
   let dispatcher = new DispatcherService(store, actionsList, logFactory());
 
@@ -52,7 +56,8 @@ export default async function diSetup(connectionInfo) {
     xml,
     logFactory(),
     dispatcher,
-    incomingStanzaHandler
+    incomingStanzaHandler,
+    store
   );
 
   let sendQueueInstance = new SendQueue(

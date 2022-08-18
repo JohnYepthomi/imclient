@@ -10,7 +10,10 @@ export const messageSlice = createSlice({
     directMessages: localDMs || [],
     groupMessages: [],
     lastMessage: localLMs || [],
+    lastGroupMessage: [],
     deliveryReceipts: [],
+    groupParticipants: [],
+    tempParticipants: [],
   },
 
   reducers: {
@@ -18,55 +21,50 @@ export const messageSlice = createSlice({
       let {
         id,
         from,
-        stamp,
+        timestamp,
+        sender,
         delivered,
         sent,
-        isClientMessage,
+        body,
       } = action.payload;
-      let chat = action.payload.body;
 
-      let itemIndex;
-      let prevState;
-      let entryExist = false;
+      let recordExist = false;
 
       state.directMessages.forEach((useritem) => {
-        if (useritem[from]) entryExist = true;
+        if (useritem[sender]) recordExist = true;
       });
 
-      if (entryExist) {
-        console.log("updating user messages already stored in redux");
-        state.directMessages.forEach((dm, index) => {
-          if (dm[from]) {
-            prevState = dm[from];
+      if (recordExist) {
+        state.directMessages.forEach((records, index) => {
+          if (records[sender]) {
+            let prevState = records[sender];
             prevState.unshift({
               from,
               id,
-              chat,
-              isClientMessage,
-              stamp,
+              body,
+              timestamp,
               delivered,
+              sender,
               sent,
             });
-            itemIndex = index;
+            state.directMessages[index][sender] = prevState;
           }
         });
 
-        state.directMessages[itemIndex][from] = prevState;
         localStorage.setItem(
           "directMessages",
           JSON.stringify(state.directMessages)
         );
       } else {
-        console.log("saving new user messages to redux");
         state.directMessages = [
           {
-            [from]: [
+            [sender]: [
               {
                 id,
                 from,
-                chat,
-                isClientMessage,
-                stamp,
+                body,
+                sender,
+                timestamp,
                 delivered,
                 sent,
               },
@@ -82,37 +80,113 @@ export const messageSlice = createSlice({
     },
 
     newGroupMessage: (state, action) => {
-      let senderjid = action.payload.from;
-      let messagebody = action.payload.body;
+      let {
+        id,
+        gid,
+        from,
+        body,
+        timestamp,
+        delivered,
+        sent,
+        joinEvent,
+        createEvent,
+      } = action.payload;
+      let groupName = gid.split("@")[0];
 
-      if (state.groupMessages[senderjid]) {
-        let prevmsgs = state.groupMessages[senderjid];
-        prevmsgs &&
-          prevmsgs.push({
-            messagebody,
-          });
+      if (state.groupMessages.some((record) => record[groupName] !== null)) {
+        let prevmsgs;
 
-        state.groupMessages[senderjid] = prevmsgs;
+        state.groupMessages.forEach((record, index) => {
+          if (record[groupName]) {
+            prevmsgs = record[groupName];
+            prevmsgs.push({
+              id,
+              gid,
+              from,
+              body,
+              timestamp,
+              delivered,
+              sent,
+              joinEvent,
+              createEvent,
+            });
+            state.groupMessages[index][groupName] = prevmsgs;
+          }
+        });
       } else {
-        state.groupMessages[senderjid] = [
-          {
-            messagebody,
-          },
-        ];
+        state.groupMessages.push({
+          [groupName]: [
+            {
+              id,
+              gid,
+              from,
+              body,
+              timestamp,
+              delivered,
+              sent,
+              joinEvent,
+              createEvent,
+            },
+          ],
+        });
       }
     },
 
+    setGroupParticipants: (state, action) => {
+      let participants = action.payload.participants;
+      let groupName = action.payload.groupName;
+
+      if (state.groupParticipants.some((p) => p[groupName])) {
+        state.groupParticipants.map((p) => {
+          if (p[groupName]) {
+            return [...p[groupName], participants];
+          }
+        });
+      } else {
+        state.groupParticipants.push({ [groupName]: participants });
+      }
+    },
+
+    setTempParticipants: (state, action) => {
+      state.tempParticipants = action.payload;
+    },
+
     updateLastMessage: (state, action) => {
+      let newMessage = action.payload;
+      let placeholder = newMessage.hasOwnProperty("gid")
+        ? newMessage.gid /* if group*/
+        : newMessage.sender; /* if chat */
+
       if (state.lastMessage.length === 0) {
-        state.lastMessage.push({ [action.payload.from]: action.payload });
+        state.lastMessage.push({ [placeholder]: newMessage });
         localStorage.setItem("lastMessage", JSON.stringify(state.lastMessage));
       } else {
         state.lastMessage = state.lastMessage.filter(
+          (lm) => Object.keys(lm)[0] !== placeholder
+        );
+
+        state.lastMessage.push({ [placeholder]: newMessage });
+        localStorage.setItem("lastMessage", JSON.stringify(state.lastMessage));
+      }
+    },
+
+    updateLastGroupMessage: (state, action) => {
+      if (state.lastGroupMessage.length === 0) {
+        state.lastGroupMessage.push({ [action.payload.from]: action.payload });
+        localStorage.setItem(
+          "lastGroupMessage",
+          JSON.stringify(state.lastGroupMessage)
+        );
+      } else {
+        state.lastGroupMessage = state.lastGroupMessage.filter(
           (lm) => Object.keys(lm)[0] !== action.payload.from
         );
 
-        state.lastMessage.push({ [action.payload.from]: action.payload });
-        localStorage.setItem("lastMessage", JSON.stringify(state.lastMessage));
+        state.lastGroupMessage.push({ [action.payload.from]: action.payload });
+        localStorage.setItem(
+          "lastGroupMessage",
+          JSON.stringify(state.lastGroupMessage)
+        );
       }
     },
 
@@ -122,11 +196,11 @@ export const messageSlice = createSlice({
       state.directMessages.forEach((user, firstIndex) => {
         Object.values(user).forEach((usermessages) => {
           usermessages.forEach((message) => {
-            if (message.isClientMessage && message.id === messageId) {
-              state.directMessages[firstIndex][message.from].forEach(
+            if (message.from === "self" && message.id === messageId) {
+              state.directMessages[firstIndex][message.sender].forEach(
                 (m, mIndex) => {
                   if (m.id === messageId) {
-                    state.directMessages[firstIndex][message.from][
+                    state.directMessages[firstIndex][message.sender][
                       mIndex
                     ].delivered = true;
                   }
@@ -140,12 +214,11 @@ export const messageSlice = createSlice({
 
     updateSentMessage: (state, action) => {
       let messageId = action.payload.id;
-
       state.directMessages.forEach((users, outerindex) => {
         Object.values(users).forEach((usermessages, midIndex) => {
           usermessages.forEach((message) => {
             if (message.id === messageId)
-              state.directMessages[outerindex][message.from][
+              state.directMessages[outerindex][message.sender][
                 midIndex
               ].sent = true;
           });
@@ -294,5 +367,7 @@ export const {
   updateSentMessage,
   updateReaction,
   removeReaction,
+  setGroupParticipants,
+  setTempParticipants,
 } = messageSlice.actions;
 export default messageSlice.reducer;

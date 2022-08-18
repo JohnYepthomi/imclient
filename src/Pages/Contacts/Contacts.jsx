@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
-import "../styles/contacts.css";
+import React from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { setContactSelected } from "../../slices/groupSetupSlice";
+import { setTempParticipants } from "../../slices/messageSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { motion } from "framer-motion/dist/framer-motion";
-import {
-  setSelectionComplete,
-  updateSelection,
-  disableEditMode,
-  setSelectionStart,
-  setSelectionEnd,
-} from "../features/groupSetupSlice";
-import { setView } from "../features/floatingButtonSlice";
+import "./Contacts.css";
+
+/* 
+   - In 'Edit Mode' the button is only visible when a contact
+     has been selected as a participant. It navigates to Groupsetup page.
+
+   - In 'Normal Mode', this button navigates to create a new contact.
+*/
 
 export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
   let user_roster = [
@@ -45,10 +46,11 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
       avatar: "https://picsum.photos/200",
     },
   ];
-  const isEditMode = useSelector((state) => state.groupSetup.editMode);
-  const isSelectionStarted = useSelector(
-    (state) => state.groupSetup.selectionStarted
+  const currentPageName = useSelector(
+    (state) => state.floatingButton.currentPage
   );
+  const isSelectionMode = currentPageName === "select_contacts" ? true : false;
+  const [contactSelectionStart, setContactSelectionStart] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -62,28 +64,32 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
       });
   }
 
-  function cleanupOnUnmount() {
-    console.log("unMountCleanup() called");
-    dispatch(disableEditMode());
-    dispatch(setSelectionEnd());
-    dispatch(setSelectionComplete());
+  function dispatchOnUnMount() {
+    dispatch(setContactSelected(false)); /* hides Floating Button */
   }
 
   /* Start/Stop Selection */
   useEffect(() => {
-    if (isEditMode) {
-      if (!isSelectionStarted) dispatch(setSelectionStart());
-      dispatch(updateSelection(selectedContacts));
-      if (selectedContacts.length === 0) dispatch(setSelectionEnd());
+    if (isSelectionMode) {
+      if (!contactSelectionStart) {
+        setContactSelectionStart(true);
+        dispatch(setContactSelected(true)); /* Show Floating Button */
+      }
+      if (selectedContacts.length === 0) {
+        setContactSelectionStart(false);
+        dispatch(setContactSelected(false)); /* hides Floating Button */
+      }
+
+      dispatch(setTempParticipants(selectedContacts));
     }
   }, [selectedContacts]);
 
-  /* CleanUp on unmount */
+  /* CleanUp - Reset groupsetup state */
   useEffect(() => {
-    return () => cleanupOnUnmount();
+    return () => dispatchOnUnMount();
   }, []);
 
-  if (isEditMode)
+  if (isSelectionMode)
     return (
       <React.Fragment>
         <ul
@@ -184,7 +190,7 @@ export default function Contacts({ pageVariants, pageTransition, pageStyle }) {
           {user_roster.map((user_contact, index) => {
             return (
               <Link
-                to={`/conversation/${user_contact.jid}?source=contacts`}
+                to={`/conversation/?type=direct&did=${user_contact.jid}`}
                 key={index}
               >
                 <li className="roster-item" jid={user_contact.jid}>

@@ -1,9 +1,10 @@
 export default class StanzaService {
-  constructor(XmlBuilder, LogService, DispatcherService, stanzaHandler) {
+  constructor(XmlBuilder, LogService, DispatcherService, stanzaHandler, store) {
     this._xml = XmlBuilder;
     this._logger = LogService("StanzaService -> ", "orange");
     this._dispatcher = DispatcherService;
     this._incomingStanzaHandler = stanzaHandler.bind(this);
+    this._store = store;
   }
 
   attachMod(XepMod, SendQueue) {
@@ -21,14 +22,14 @@ export default class StanzaService {
 
   async sendChat({ jid, body }) {
     let id = this.generateId(5);
-    let stamp = this.getTimestamp();
+    let timestamp = this.getTimestamp();
 
     let m = {
       id,
-      from: jid,
+      from: "self",
       body,
-      stamp,
-      isClientMessage: true,
+      timestamp,
+      sender: jid,
       delivered: false,
       sent: false,
     };
@@ -39,6 +40,64 @@ export default class StanzaService {
     let stanza = new this._xml(
       "message",
       { type: "chat", to: jid, id },
+      this._xml("body", {}, body)
+    );
+
+    stanza.c("request", { xmlns: "urn:xmpp:receipts" });
+    await this.send(stanza);
+  }
+
+  async sendGroupChat({ gid, body, nick }) {
+    let id = this.generateId(5);
+    let timestamp = this.getTimestamp();
+
+    let m = {
+      id,
+      gid,
+      from: "self",
+      body,
+      timestamp,
+      delivered: false,
+      sent: false,
+    };
+
+    this._dispatcher.actionsDispatcher().newGroupMessage(m);
+    this._dispatcher.actionsDispatcher().updateLastMessage(m);
+
+    let stanza = new this._xml(
+      "message",
+      { type: "chat", to: gid, id },
+      this._xml("body", {}, body)
+    );
+
+    stanza.c("request", { xmlns: "urn:xmpp:receipts" });
+    await this.send(stanza);
+  }
+
+  async sendGroupChat({ groupname, nick, body }) {
+    let id = this.generateId(5);
+    let stamp = this.getTimestamp();
+
+    let m = {
+      id,
+      from: groupname,
+      body,
+      stamp,
+      isClientMessage: true,
+      delivered: false,
+      sent: false,
+    };
+
+    this._dispatcher.actionsDispatcher().newGroupMessage(m);
+    this._dispatcher.actionsDispatcher().updateLastGroupMessage(m);
+
+    let stanza = new this._xml(
+      "message",
+      {
+        type: "groupchat",
+        to: `${groupname}@conference.localhost/${nick}`,
+        id,
+      },
       this._xml("body", {}, body)
     );
 
@@ -93,16 +152,17 @@ export default class StanzaService {
 
   async sendXep(s) {
     this._logger.info("sending xep stanza");
+
+    console.log("sending Xep from stanzaService");
     await this.send(s);
   }
 
   async send(payload) {
+    console.log("sendling payload to mqueue");
     await this._sendQueue.add(payload);
   }
 
   async sendChatAck(stanza) {
-    // REFER: https://xmpp.org/extensions/xep-0184.html
-
     let { id, from } = stanza.attrs;
 
     stanza.children.forEach(async (child) => {

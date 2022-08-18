@@ -1,19 +1,14 @@
-import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import {
-  Login,
-  Conversation,
-  MessagesList,
-  Contacts,
-  Status,
-} from "./components";
 import Home from "./container/home";
+import React from "react";
 import store from "./store/store";
-import { Provider } from "react-redux";
-import { PrivateRoute } from "./auth/PrivateRouter";
 import ClientService from "./services/connection.service";
-import NewGroupMessageSetup from "./components/NewGroupMessageSetup";
-
+import GroupSetup from "./Pages/Group Setup/GroupSetup";
+import { Provider } from "react-redux";
+import { useEffect } from "react";
+import { PrivateRoute } from "./auth/PrivateRouter";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { Login, Messages, Contacts, Status } from "./Pages";
+import MessagesList from "./components/MessagesList";
 export default function App() {
   /* release resource*/
   const handleTabClose = async (event) => {
@@ -40,8 +35,9 @@ export default function App() {
             <Route index={true} element={<MessagesList />} />
             <Route path="status" element={<Status />} />
             <Route path="contacts" element={<Contacts />} />
-            <Route path="groupsetup" element={<NewGroupMessageSetup />}></Route>
-            <Route path="conversation/:senderjid" element={<Conversation />} />
+            <Route path="select_contacts" element={<Contacts />} />
+            <Route path="groupsetup" element={<GroupSetup />}></Route>
+            <Route path="conversation" element={<Messages />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />} />

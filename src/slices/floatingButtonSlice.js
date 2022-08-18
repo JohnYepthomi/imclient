@@ -4,15 +4,15 @@ export const floatingButtonSlice = createSlice({
   name: "floatingButton",
 
   initialState: {
-    currentView: "chats",
+    currentPage: "chats",
   },
 
   reducers: {
-    setView: (state, action) => {
-      state.currentView = action.payload;
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
     },
   },
 });
 
-export const { setView } = floatingButtonSlice.actions;
+export const { setCurrentPage } = floatingButtonSlice.actions;
 export default floatingButtonSlice.reducer;

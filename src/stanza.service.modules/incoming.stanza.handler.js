@@ -4,28 +4,32 @@ export default function incomingStanzaHandler(stanza) {
   routeStanza(stanza);
 
   function routeStanza(stanza) {
-    if (stanza.is("presence")) presenceHandler(stanza);
-    else if (stanza.is("message")) mesageHandler(stanza);
-    else iqHandler(stanza);
+    stanza.is("presence") && presenceHandler(stanza);
+    stanza.is("message") && mesageHandler(stanza);
+    stanza.is("iq") && iqHandler(stanza);
   }
 
   /* Handlers */
   function presenceHandler(stanza) {
-    console.log("incoming stanza handler presenceHandler called...");
-    if (!stanza.attrs.hasOwnProperty("type")) {
+    console.log("presence stanza", stanza);
+
+    const { type, id } = stanza.attrs;
+    const HAVE_TYPE = stanza.attrs.hasOwnProperty("type");
+
+    if (id !== "request-new-muc" && !HAVE_TYPE) {
       //_stanzaServiceContext._dispatcher.actionsDispatcher().updateOnlineUsers();
       _stanzaServiceContext._logger.info(`Available Presence: ${stanza}`);
-    } else if (stanza.attrs.type === "unavailable") {
+    } else if (type === "unavailable") {
       //_stanzaServiceContext._dispatcher.actionsDispatcher().updateOfflineUsers();
       _stanzaServiceContext._logger.info(`Unavailable Presence: ${stanza}`);
+    } else if (id === "request-new-muc") {
+      instantMucResovler(stanza);
     }
   }
 
   function mesageHandler(stanza) {
-    console.log("incoming - messageHandler called...");
-
     let { type, id } = stanza.attrs;
-
+    console.log("message stanza: ", stanza);
     if (type === "chat") {
       let isReactionMsg = stanza.children.some(
         (child) => child.name === "reactions"
@@ -34,18 +38,16 @@ export default function incomingStanzaHandler(stanza) {
       if (isReactionMsg) reactionsResolver(stanza);
       else chatResolver(stanza);
       return;
-    }
-
-    if (id === "message-ack") {
+    } else if (id === "message-ack") {
       if (stanza.children.some((child) => child.name === "received"))
         ackResolver(stanza);
 
       return;
-    }
-
-    if (type === "groupchat") {
-      mucResolver(stanza);
+    } else if (type === "groupchat") {
+      groupChatResolver(stanza);
       return;
+    } else if (id === "direct-invitation") {
+      directInvitationResolver(stanza);
     }
   }
 
@@ -55,13 +57,12 @@ export default function incomingStanzaHandler(stanza) {
 
   /* Resolvers */
   function chatResolver(stanza) {
-    console.log("chatResolver called...");
+    console.log("chat stanza: ", stanza);
+
     let { id, from } = stanza.attrs;
-    let stamp = _stanzaServiceContext.getTimestamp();
-    let sent = undefined;
-    let delivered = undefined;
-    let isClientMessage = false;
     let body;
+    let sender = from.split("/")[0];
+    let timestamp = _stanzaServiceContext.getTimestamp();
     from = from.split("/")[0];
 
     stanza.children.forEach((child) => {
@@ -72,10 +73,8 @@ export default function incomingStanzaHandler(stanza) {
       id,
       from,
       body,
-      stamp,
-      sent,
-      delivered,
-      isClientMessage,
+      sender,
+      timestamp,
     };
 
     _stanzaServiceContext._dispatcher
@@ -122,8 +121,37 @@ export default function incomingStanzaHandler(stanza) {
     });
   }
 
-  function mucResolver(stanza) {
+  function groupChatResolver(stanza) {
     _stanzaServiceContext._logger.info("Group Message Stanza: ", stanza);
+    console.log("Group Message Stanza: ", stanza);
     // _stanzaServiceContext._dispatcher.actionsDispatcher().newGroupMessage();
+  }
+
+  async function instantMucResovler(stanza) {
+    let subject = stanza.attrs.from.split("@")[0];
+    let gid = stanza.attrs.from;
+    await _stanzaServiceContext.xepList().createInstantRoom(subject);
+    /* This has to be done when you receive a IQ Result and not here */
+    _stanzaServiceContext._dispatcher.actionsDispatcher().setGroupCreated(true);
+  }
+
+  function directInvitationResolver(stanza) {
+    let { id, from } = stanza.attrs;
+    let gid = stanza.getChild("x").attrs.jid;
+    let payload = {
+      id,
+      gid,
+      from,
+      body: "na",
+      timestamp: _stanzaServiceContext.getTimestamp(),
+      delivered: undefined,
+      sent: undefined,
+      createEvent: true,
+      joinEvent: false,
+    };
+
+    _stanzaServiceContext._dispatcher
+      .actionsDispatcher()
+      .newGroupMessage(payload);
   }
 }

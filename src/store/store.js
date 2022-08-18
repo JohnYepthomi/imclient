@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import messageReducer from "../features/messageSlice";
-import contactsReducer from "../features/contactsSlice";
-import authReducer from "../features/authSlice";
-import groupSetupSlice from "../features/groupSetupSlice";
-import floatingButtonSlice from "../features/floatingButtonSlice";
+import messageReducer from "../slices/messageSlice";
+import contactsReducer from "../slices/contactsSlice";
+import authReducer from "../slices/authSlice";
+import groupSetupSlice from "../slices/groupSetupSlice";
+import floatingButtonSlice from "../slices/floatingButtonSlice";
 
 export default configureStore({
   reducer: {

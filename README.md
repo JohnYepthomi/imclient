@@ -1,15 +1,10 @@
 # Asend©️ Instant Messenger
 
-_XMPP Client for Ejabberd_
+_XMPP Custom Client for Ejabberd_
 
 **SUPPORTS :**
 
+- Disappearing Rooms
 - Delivery Receipts ✔️
 - Message Reactions 😆
-- Group Messages
-  - Moderator
-  - Ban/Unban
-  - Kick
-  - more
-- Contacts
 - more
