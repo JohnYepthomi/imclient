@@ -214,7 +214,8 @@ export default class StanzaService {
       MONTH = d.getMonth(),
       DAY = d.getDate();
 
-    return `${DAY}/${MONTH}-${H}:${M}:${S}`;
+    // return `${DAY}/${MONTH}-${H}:${M}:${S}`;
+    return `${H}:${M}`;
   }
 
   onStanza(stanza) {

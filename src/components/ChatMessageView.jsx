@@ -5,6 +5,7 @@ import Ticks from "./Ticks";
 import useLongPress from "../hooks/long.press";
 import Reactions from "./Reactions";
 import EmojiSelector from "./EmojiSelector";
+import styled from "styled-components";
 
 export default function ChatMessageView({
   senderId,
@@ -35,6 +36,19 @@ export default function ChatMessageView({
     window.scrollTo(0, scrollRef.current.scrollHeight);
     scrollObject.setScroll(false);
   }
+
+  let Chat = styled.div`
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 5px;
+    font-size: 0.85rem;
+    padding: 17px;
+    margin-top: 40px;
+    min-height: calc(100vh - 35px);
+    background-color: white;
+  `;
 
   useEffect(() => {
     scrollToLastMessage();
