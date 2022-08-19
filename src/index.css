@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
 * {
   margin: 0;
@@ -28,7 +28,7 @@
   --border-lg: 3px;
   --border-clr: #ccc;
 
-  --font-primary: "ubuntu", sans-serif;
+  --font-primary: "Open Sans", sans-serif;
 }
 
 body {

@@ -11,6 +11,7 @@ import {
   setGroupParticipants,
   setTempParticipants,
 } from "../../slices/messageSlice";
+import { setPendingSetups } from "../../slices/groupSetupSlice";
 import "./GroupSetup.css";
 
 export default function GroupSetup() {
@@ -35,15 +36,15 @@ export default function GroupSetup() {
     try {
       const imageUrl = URL.createObjectURL(fileInputRef.current.files[0]);
       const imageFilename = fileInputRef.current.name;
-      const imageType = "";
       const base64Image = base64encoder(fileInputRef.current.files[0]);
+      const imageType = "";
 
       if (imageFilename.includes("png")) imageType = "png";
       else if (imageFilename.includes("jpg") || imageFilename.includes("jpeg"))
         imageType = "jpg";
 
       setImg(imageUrl);
-      setBase65Img();
+      // setBase65Img(base64Image);
     } catch (e) {
       console.log(e);
     }
@@ -80,6 +81,7 @@ export default function GroupSetup() {
       dispatch(setRequestSubmitted(false)); /* used by Floating Button */
       return;
     } else if (hasGroupRequestSubmitted) {
+      dispatch(setPendingSetups({ groupName, img }));
       createNewRoom();
     }
 
