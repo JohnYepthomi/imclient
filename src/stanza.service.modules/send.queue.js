@@ -68,16 +68,15 @@ export default class SendQueue {
     this._logger.info("sending message");
 
     try {
-      let messageId = this.mq[0].attrs.id;
-
       if (this.mq[0].attrs.type === "chat") {
         this._dispatcher
           .actionsDispatcher()
-          .updateSentMessage({ id: messageId });
+          .updateSentMessage({ id: this.mq[0].attrs.id });
       } else if (this.mq[0].attrs.type === "groupchat") {
-        this._dispatcher
-          .actionsDispatcher()
-          .updateGroupSentMessage({ id: messageId });
+        this._dispatcher.actionsDispatcher().updateGroupSentMessage({
+          id: this.mq[0].attrs.id,
+          groupName: this.mq[0].attrs.to.split("@")[0],
+        });
       }
 
       await this._conn.send(this.mq[0]);

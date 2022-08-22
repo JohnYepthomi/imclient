@@ -17,16 +17,10 @@ export const messageSlice = createSlice({
   },
 
   reducers: {
+    /*---------Direct Messages Reducers---------*/
     newDirectMessage: (state, action) => {
-      let {
-        id,
-        from,
-        timestamp,
-        sender,
-        delivered,
-        sent,
-        body,
-      } = action.payload;
+      let { id, from, timestamp, sender, delivered, sent, body } =
+        action.payload;
 
       let recordExist = false;
 
@@ -79,78 +73,6 @@ export const messageSlice = createSlice({
       }
     },
 
-    newGroupMessage: (state, action) => {
-      let {
-        id,
-        gid,
-        from,
-        body,
-        timestamp,
-        delivered,
-        sent,
-        joinEvent,
-        createEvent,
-      } = action.payload;
-      let groupName = gid.split("@")[0];
-
-      if (state.groupMessages.some((record) => record[groupName] !== null)) {
-        let prevmsgs;
-
-        state.groupMessages.forEach((record, index) => {
-          if (record[groupName]) {
-            prevmsgs = record[groupName];
-            prevmsgs.push({
-              id,
-              gid,
-              from,
-              body,
-              timestamp,
-              delivered,
-              sent,
-              joinEvent,
-              createEvent,
-            });
-            state.groupMessages[index][groupName] = prevmsgs;
-          }
-        });
-      } else {
-        state.groupMessages.push({
-          [groupName]: [
-            {
-              id,
-              gid,
-              from,
-              body,
-              timestamp,
-              delivered,
-              sent,
-              joinEvent,
-              createEvent,
-            },
-          ],
-        });
-      }
-    },
-
-    setGroupParticipants: (state, action) => {
-      let participants = action.payload.participants;
-      let groupName = action.payload.groupName;
-
-      if (state.groupParticipants.some((p) => p[groupName])) {
-        state.groupParticipants.map((p) => {
-          if (p[groupName]) {
-            return [...p[groupName], participants];
-          }
-        });
-      } else {
-        state.groupParticipants.push({ [groupName]: participants });
-      }
-    },
-
-    setTempParticipants: (state, action) => {
-      state.tempParticipants = action.payload;
-    },
-
     updateLastMessage: (state, action) => {
       let newMessage = action.payload;
       let placeholder = newMessage.hasOwnProperty("gid")
@@ -167,26 +89,6 @@ export const messageSlice = createSlice({
 
         state.lastMessage.push({ [placeholder]: newMessage });
         localStorage.setItem("lastMessage", JSON.stringify(state.lastMessage));
-      }
-    },
-
-    updateLastGroupMessage: (state, action) => {
-      if (state.lastGroupMessage.length === 0) {
-        state.lastGroupMessage.push({ [action.payload.from]: action.payload });
-        localStorage.setItem(
-          "lastGroupMessage",
-          JSON.stringify(state.lastGroupMessage)
-        );
-      } else {
-        state.lastGroupMessage = state.lastGroupMessage.filter(
-          (lm) => Object.keys(lm)[0] !== action.payload.from
-        );
-
-        state.lastGroupMessage.push({ [action.payload.from]: action.payload });
-        localStorage.setItem(
-          "lastGroupMessage",
-          JSON.stringify(state.lastGroupMessage)
-        );
       }
     },
 
@@ -357,18 +259,129 @@ export const messageSlice = createSlice({
         JSON.stringify(state.directMessages)
       );
     },
+
+    /*---------Group Messages Reducers---------*/
+
+    newGroupMessage: (state, action) => {
+      let {
+        id,
+        gid,
+        from,
+        body,
+        groupName,
+        timestamp,
+        delivered,
+        sent,
+        joinEvent,
+        createEvent,
+      } = action.payload;
+
+      if (state.groupMessages.some((record) => record[groupName] !== null)) {
+        let prevmsgs;
+
+        state.groupMessages.forEach((record, index) => {
+          if (record[groupName]) {
+            prevmsgs = record[groupName];
+            prevmsgs.push({
+              id,
+              gid,
+              from,
+              body,
+              timestamp,
+              delivered,
+              sent,
+              joinEvent,
+              createEvent,
+            });
+            state.groupMessages[index][groupName] = prevmsgs;
+          }
+        });
+      } else {
+        state.groupMessages.push({
+          [groupName]: [
+            {
+              id,
+              gid,
+              from,
+              body,
+              timestamp,
+              delivered,
+              sent,
+              joinEvent,
+              createEvent,
+            },
+          ],
+        });
+      }
+    },
+
+    setGroupParticipants: (state, action) => {
+      let participants = action.payload.participants;
+      let groupName = action.payload.groupName;
+
+      if (state.groupParticipants.some((p) => p[groupName])) {
+        state.groupParticipants.map((p) => {
+          if (p[groupName]) {
+            return [...p[groupName], participants];
+          }
+        });
+      } else {
+        state.groupParticipants.push({ [groupName]: participants });
+      }
+    },
+
+    setTempParticipants: (state, action) => {
+      state.tempParticipants = action.payload;
+    },
+
+    updateGroupSentMessage: (state, action) => {
+      let groupName = action.payload.groupName;
+      let msgId = action.payload.messageId;
+
+      state.groupMessages.forEach((record) => {
+        if (record[groupName]) {
+          record[groupName].forEach((msg, index) => {
+            if (msg.id == msgId) {
+              record[groupName][index].sent = true;
+            }
+          });
+        }
+      });
+    },
+
+    updateLastGroupMessage: (state, action) => {
+      if (state.lastGroupMessage.length === 0) {
+        state.lastGroupMessage.push({ [action.payload.from]: action.payload });
+        localStorage.setItem(
+          "lastGroupMessage",
+          JSON.stringify(state.lastGroupMessage)
+        );
+      } else {
+        state.lastGroupMessage = state.lastGroupMessage.filter(
+          (lm) => Object.keys(lm)[0] !== action.payload.from
+        );
+
+        state.lastGroupMessage.push({ [action.payload.from]: action.payload });
+        localStorage.setItem(
+          "lastGroupMessage",
+          JSON.stringify(state.lastGroupMessage)
+        );
+      }
+    },
   },
 });
 
 export const {
   newDirectMessage,
-  newGroupMessage,
   updateLastMessage,
   updateDeliveredMessage,
   updateSentMessage,
   updateReaction,
   removeReaction,
+  newGroupMessage,
+  updateGroupSentMessage,
   setGroupParticipants,
   setTempParticipants,
+  updateLastGroupMessage,
 } = messageSlice.actions;
 export default messageSlice.reducer;

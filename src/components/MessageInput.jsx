@@ -2,7 +2,7 @@ import React from "react";
 import { useRef } from "react";
 import container from "../DI/di-container";
 
-export default function MessageInput({ type, senderId, setScroll }) {
+export default function MessageInput({ type, senderId, setScroll, groupName }) {
   const messageInputRef = useRef();
   const { StanzaService } = container;
 
@@ -44,6 +44,7 @@ export default function MessageInput({ type, senderId, setScroll }) {
       let newMessage = {
         gid: senderId,
         body: message,
+        groupName,
       };
 
       await StanzaService.sendGroupChat(newMessage);

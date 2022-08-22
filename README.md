@@ -8,3 +8,4 @@ _XMPP Custom Client for Ejabberd_
 - Delivery Receipts ✔️
 - Message Reactions 😆
 - more
+- `"typescript": "^4.7.4"`

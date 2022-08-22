@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/Typescript_Files
 /.pnp
 .pnp.js
 

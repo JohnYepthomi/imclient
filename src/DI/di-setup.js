@@ -3,11 +3,14 @@ import container from "./di-container";
 import XepModule from "../stanza.service.modules/xep.mods";
 import SendQueue from "../stanza.service.modules/send.queue";
 import UserService from "../services/user.service";
-import StanzaService from "../services/stanza.service";
-import DispatcherService from "../services/dispatcher.service";
+
+//Tsc Compiled
+import StanzaService from "../services/dist/stanza.service";
+import { LogService } from "../services/dist/log.service";
+import DispatcherService from "../services/dist/dispatcher.service";
+
 import ConnectionService from "../services/connection.service";
 import incomingStanzaHandler from "../stanza.service.modules/incoming.stanza.handler";
-import { LogService } from "../services/log.service";
 import { client, xml } from "@xmpp/client";
 import { setGroupCreated } from "../slices/groupSetupSlice";
 import {
@@ -18,6 +21,8 @@ import {
   updateReaction,
   removeReaction,
   newGroupMessage,
+  updateGroupSentMessage,
+  updateLastGroupMessage,
 } from "../slices/messageSlice";
 
 export default async function diSetup(connectionInfo) {
@@ -48,6 +53,8 @@ export default async function diSetup(connectionInfo) {
     { removeReaction },
     { setGroupCreated },
     { newGroupMessage },
+    { updateGroupSentMessage },
+    { updateLastGroupMessage },
   ];
   let dispatcher = new DispatcherService(store, actionsList, logFactory());
 

@@ -11,7 +11,7 @@ export default function MessagesList() {
   const pendingSetups = useSelector((state) => state.groupSetup.pendingSetups);
 
   function handleGroupChatClick(gid, senderjid) {
-    navigate(`conversation/?type=group&gid=${gid}&from=${senderjid}`);
+    navigate(`conversation/?type=group&gid=${senderjid}&from=${gid}`);
   }
 
   function handleChatClick(senderjid) {
@@ -20,48 +20,42 @@ export default function MessagesList() {
 
   return (
     <div className="messages-container">
-      {/* Pending Group Setups */}
+      {/*----------Pending Group Setups----------*/}
       {pendingSetups && pendingSetups.length > 0 && (
         <ul className="messages-list">
-          {pendingSetups &&
-            pendingSetups.map((record, index) => {
-              return (
-                <li
-                  key={index}
-                  onClick={() => {
-                    handleGroupChatClick(
-                      record.groupName.split("/")[0],
-                      "self"
-                    );
-                  }}
-                >
-                  <div className="message-sender-container">
-                    <img src={record.img} alt="sender avatar" />
-                    <div className="flex-row-container">
-                      <div className="sender-name">
-                        {record.groupName.split("@")[0]}
-                      </div>
+          {pendingSetups.map((record, index) => {
+            return (
+              <li
+                key={index}
+                onClick={() => {
+                  handleGroupChatClick(record.groupName.split("/")[0], "self");
+                }}
+              >
+                <div className="message-sender-container">
+                  <img src={record.img} alt="sender avatar" />
+                  <div className="flex-row-container">
+                    <div className="sender-name">
+                      {record.groupName.split("@")[0]}
+                    </div>
 
-                      <div className="message-peek-container">
-                        {/* Ticks icon for the last message sent */}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="13"
-                          height="13"
-                          fill="green"
-                          class="bi bi-info-circle-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                        </svg>
-                        <span className="new-message-peek">
-                          Invitations sent
-                        </span>
-                      </div>
+                    <div className="message-peek-container">
+                      {/* Ticks icon for the last message sent */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="13"
+                        height="13"
+                        fill="green"
+                        class="bi bi-info-circle-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                      </svg>
+                      <span className="new-message-peek">Invitations sent</span>
                     </div>
                   </div>
+                </div>
 
-                  {/* <div className="buttons-container">
+                {/* <div className="buttons-container">
                   <div className="last-chat-day">{msg.timestamp}</div>
                   <div className="more-buttons">
                     <svg
@@ -76,16 +70,16 @@ export default function MessagesList() {
                     </svg>
                   </div>
                 </div> */}
-                </li>
-              );
-            })}
+              </li>
+            );
+          })}
         </ul>
       )}
 
-      {/* DirectMessages */}
-      <ul className="messages-list">
-        {directMessages &&
-          directMessages.map((msg, index) => {
+      {/*----------DirectMessages----------------*/}
+      {directMessages && directMessages.length > 0 && (
+        <ul className="messages-list">
+          {directMessages.map((msg, index) => {
             return Object.keys(msg).map((record) => {
               return (
                 <li
@@ -148,12 +142,13 @@ export default function MessagesList() {
               );
             });
           })}
-      </ul>
+        </ul>
+      )}
 
-      {/* GroupMessages */}
-      <ul className="messages-list">
-        {groupMessages &&
-          groupMessages.map((records, index) => {
+      {/*----------GroupMessages-----------------*/}
+      {groupMessages && groupMessages.length > 0 && (
+        <ul className="messages-list">
+          {groupMessages.map((records, index) => {
             let msg = Object.values(records)[index][0];
             return (
               <li
@@ -166,7 +161,9 @@ export default function MessagesList() {
                 <div className="message-sender-container">
                   <img src="https://picsum.photos/400" alt="sender avatar" />
                   <div className="flex-row-container">
-                    <div className="sender-name">{msg.gid.split("@")[0]}</div>
+                    <div className="sender-name">
+                      {msg.semderjid.split("@")[0]}
+                    </div>
 
                     <div className="message-peek-container">
                       {/* Ticks icon for the last message sent */}
@@ -211,7 +208,8 @@ export default function MessagesList() {
               </li>
             );
           })}
-      </ul>
+        </ul>
+      )}
     </div>
   );
 }

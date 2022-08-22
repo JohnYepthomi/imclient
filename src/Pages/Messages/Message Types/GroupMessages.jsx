@@ -19,7 +19,10 @@ export default function GroupMessages({ gid, nick }) {
   }
 
   return (
-    <div style={{ position: "absolute", width: "100%", top: 0, zIndex: 9999 }}>
+    <div
+      className="group-message-container"
+      style={{ position: "absolute", width: "100%", top: 0, zIndex: 9999 }}
+    >
       <MessageHeader type="groupChat" senderId={groupJid} />
       <GroupMessageView
         setShowModal={setShowModal}
@@ -27,23 +30,43 @@ export default function GroupMessages({ gid, nick }) {
         groupName={groupName}
         scrollObject={{ scroll, setScroll }}
       />
-      <button
+      <div
         style={{
-          outline: "none",
-          backgrounColor: "darkgreen",
-          color: "white",
-          padding: "10px",
-        }}
-        onClick={() => {
-          sendInvites();
+          position: "absolute",
+          top: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          width: "100%",
         }}
       >
-        Invite Participants
-      </button>
+        <button
+          style={{
+            outline: "none",
+            color: "white",
+            border: "none",
+            padding: "10px",
+            margin: "50px",
+            marginBottom: "40px",
+            borderRadius: "10px",
+            boxShadow: "-3px 4px 15px -1px black",
+            border: "1px solid darkseagreen",
+            backgroundColor: "#41784a",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            sendInvites();
+          }}
+        >
+          Invite Participants
+        </button>
+      </div>
       <MessageInput
         type="groupchat"
         senderId={groupJid}
         setScroll={setScroll}
+        groupName={groupName}
       />
       {showModal && (
         <RemoveReactionModal

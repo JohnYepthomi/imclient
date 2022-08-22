@@ -45,10 +45,6 @@ export default function GroupMessageView({
   }, [scrollObject.scroll]);
 
   useEffect(() => {
-    console.log({ groupParticipants });
-  }, [groupParticipants]);
-
-  useEffect(() => {
     if (document.contains(document.querySelector(".emoji-container"))) {
       //Hide emoji selector UI
       document.querySelector(".emoji-container").style.display = "none";

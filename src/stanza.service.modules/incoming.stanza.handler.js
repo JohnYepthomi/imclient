@@ -124,7 +124,33 @@ export default function incomingStanzaHandler(stanza) {
   function groupChatResolver(stanza) {
     _stanzaServiceContext._logger.info("Group Message Stanza: ", stanza);
     console.log("Group Message Stanza: ", stanza);
-    // _stanzaServiceContext._dispatcher.actionsDispatcher().newGroupMessage();
+    let { id, to, from } = stanza.attrs;
+    let gid = to;
+    let groupName = gid.split("@")[0];
+    let timestamp = _stanzaServiceContext.getTimestamp();
+    let body;
+    from = from.split("/")[0];
+
+    stanza.children.forEach((child) => {
+      if (child.name === "body") body = child.children[0];
+    });
+
+    const payload = {
+      id,
+      gid,
+      from,
+      body,
+      groupName,
+      timestamp,
+      delivered: false,
+      sent: false,
+    };
+
+    _stanzaServiceContext._dispatcher
+      .actionsDispatcher()
+      .newGroupMessage(payload);
+
+    _stanzaServiceContext.sendChatAck(stanza);
   }
 
   async function instantMucResovler(stanza) {

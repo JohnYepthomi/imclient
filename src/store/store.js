@@ -4,6 +4,7 @@ import contactsReducer from "../slices/contactsSlice";
 import authReducer from "../slices/authSlice";
 import groupSetupSlice from "../slices/groupSetupSlice";
 import floatingButtonSlice from "../slices/floatingButtonSlice";
+import usersSlice from "../slices/usersSlice";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     contacts: contactsReducer,
     groupSetup: groupSetupSlice,
     floatingButton: floatingButtonSlice,
+    users: usersSlice,
   },
 });
