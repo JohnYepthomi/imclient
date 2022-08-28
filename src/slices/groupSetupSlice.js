@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const groupSetupSlice = createSlice({
-  name: "paticipants",
+  name: "groupSetup",
 
   initialState: {
     contactSelected: false,
     requestSubmitted: false,
     groupCreated: false,
-    pendingSetups: [],
   },
 
   reducers: {
@@ -20,9 +19,6 @@ export const groupSetupSlice = createSlice({
     setContactSelected: (state, action) => {
       state.contactSelected = action.payload; /* FloatingButton component */
     },
-    setPendingSetups: (state, action) => {
-      state.pendingSetups.push(action.payload); /* Messages list */
-    },
   },
 });
 
@@ -30,6 +26,5 @@ export const {
   setContactSelected,
   setRequestSubmitted,
   setGroupCreated,
-  setPendingSetups,
 } = groupSetupSlice.actions;
 export default groupSetupSlice.reducer;

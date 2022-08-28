@@ -104,7 +104,7 @@ ul {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .message-peek-container {
@@ -124,7 +124,7 @@ ul {
   color: #378169;
   font-style: italic;
   height: -moz-fit-content;
-  height: 15px;
+  /* height: 15px; */
   min-width: 200px;
   width: 200px;
   max-width: 250px;

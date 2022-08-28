@@ -14,12 +14,12 @@ import "./Messages.css";
 export default function Messages() {
   const [searchParams] = useSearchParams();
   let type = searchParams.get("type");
-  let gid, nick, senderjid, completed;
+  let groupName, nick, senderjid, completed;
 
   if (type === "direct") {
     senderjid = searchParams.get("did");
   } else if (type === "group") {
-    gid = searchParams.get("gid");
+    groupName = searchParams.get("name");
     nick = searchParams.get("nick");
     senderjid = searchParams.get("from");
   }
@@ -27,6 +27,6 @@ export default function Messages() {
   return type === "direct" ? (
     <DirectMessages senderjid={senderjid} />
   ) : (
-    <GroupMessages gid={gid} nick={nick} senderjid={senderjid} />
+    <GroupMessages groupName={groupName} nick={nick} senderjid={senderjid} />
   );
 }

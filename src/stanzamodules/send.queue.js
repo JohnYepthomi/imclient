@@ -24,10 +24,10 @@ export default class SendQueue {
   }
 
   tryAgain() {
-    this._logger.info("retrying send message");
+    // this._logger.info("retrying send message");
     if (this.retryDone)
       setTimeout(async () => {
-        this._logger.info("sending message on tryAgain() timeout");
+        // this._logger.info("sending message on tryAgain() timeout");
         await this.send();
         this.retryDone = true;
       }, 2500);
@@ -36,7 +36,7 @@ export default class SendQueue {
   async send() {
     if (this.mq.length === 0) return;
 
-    this._logger.info("XmppClient.status: " + this._conn.status);
+    // this._logger.info("XmppClient.status: " + this._conn.status);
 
     if (!navigator.onLine) {
       this._logger.info("offline");

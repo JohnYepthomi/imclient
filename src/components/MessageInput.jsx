@@ -1,10 +1,9 @@
-import React from "react";
-import { useRef } from "react";
+import React, {useRef} from "react";
 import container from "../DI/di-container";
 
 export default function MessageInput({ type, senderId, setScroll, groupName }) {
   const messageInputRef = useRef();
-  const { StanzaService } = container;
+  const {StanzaService} = container;
 
   const handleMessageInputEnter = async (e) => {
     if (e.keyCode === 13) {

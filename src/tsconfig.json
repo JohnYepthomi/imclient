@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+    "outDir": "./dist",
+    "removeComments": true,
+    "target": "ES6",
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "allowUnreachableCode": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+  },
+  "include": [
+    "services/stanza.service.ts",
+    "services/dispatcher.service.ts",
+    "services/log.service.ts",
+    "slices/messageSlice.ts",
+    "stanzamodules/incoming.stanza.handler.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "node_modules/@types",
+    "typings/index",
+    "typings/index.d.tsc"
+  ]
+}

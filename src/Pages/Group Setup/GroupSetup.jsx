@@ -2,35 +2,27 @@ import React from "react";
 import container from "../../DI/di-container";
 import base64encoder from "../../utils/base64encoder";
 import { motion } from "framer-motion/dist/framer-motion";
-import { setGroupCreated } from "../../slices/groupSetupSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { setRequestSubmitted } from "../../slices/groupSetupSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
-import {
-  setGroupParticipants,
-  setTempParticipants,
-} from "../../slices/messageSlice";
-import { setPendingSetups } from "../../slices/groupSetupSlice";
+import { setGroupParticipants, setTempParticipants } from "../../dist/slices/messageSlice";
+import { setGroupCreated, setRequestSubmitted } from "../../slices/groupSetupSlice";
+import { newGroupMessage } from "../../dist/slices/messageSlice";
 import "./GroupSetup.css";
 
 export default function GroupSetup() {
   const groupNameRef = useRef();
   const fileInputRef = useRef();
-  const [groupName, setGroupName] = useState();
-  const [img, setImg] = useState(false);
-  const [base64Img, setBase65Img] = useState();
   const dispatch = useDispatch();
-  const { StanzaService } = container;
-  const tempParticipants = useSelector(
-    (state) => state.messages.tempParticipants
-  );
-  const hasGroupRequestSubmitted = useSelector(
-    (state) => state.groupSetup.requestSubmitted
-  );
+  const [img, setImg] = useState(false);
+  const [groupName, setGroupName] = useState();
+  const [base64Img, setBase65Img] = useState();
   const isGroupCreated = useSelector((state) => state.groupSetup.groupCreated);
-  const nickName = `bitplayer${generateId(3)}`;
+  const [nickName, setNickName] = useState();//
+  const { StanzaService } = container;
   const navigate = useNavigate();
+  const tempParticipants = useSelector((state) => state.messages.tempParticipants);
+  const sendCreateReq = useSelector((state) => state.groupSetup.requestSubmitted);
 
   function handleGetImageInfo() {
     try {
@@ -68,35 +60,39 @@ export default function GroupSetup() {
   }
 
   function createNewRoom() {
-    dispatch(
-      setGroupParticipants({ groupName, participants: tempParticipants })
-    );
-    dispatch(setTempParticipants([]));
-    StanzaService.xepList().requestNewRoom(groupName, nickName);
+    let newNick =  `bitplayer${generateId(3)}`;
+    dispatch(setGroupParticipants({ groupName, participants: tempParticipants }));
+    StanzaService.xepList().requestNewRoom(groupName, newNick);
+    setNickName(newNick);
   }
 
-  useEffect(() => {
+  function validInput(){
     if (groupName === "" || groupName === null || groupName === undefined) {
-      console.log("Enter a room name.");
-      dispatch(setRequestSubmitted(false)); /* used by Floating Button */
-      return;
-    } else if (hasGroupRequestSubmitted) {
-      dispatch(setPendingSetups({ groupName, img }));
-      createNewRoom();
-    }
+      console.log('room name is empty');
+      return false
+    }else return true;
+  }
 
-    return () => {
-      dispatch(setRequestSubmitted(false)); /* used by Floating Button */
-    };
-  }, [hasGroupRequestSubmitted]);
+  const floatingButtonStateReset = () => {
+    console.log('floatingButtonStateReset called...');
+    dispatch(setRequestSubmitted(false));
+  };
+
+  useEffect(()=>{
+    if(!validInput())
+      floatingButtonStateReset();
+    else if(validInput() && sendCreateReq) createNewRoom();
+  }, [sendCreateReq]);
 
   useEffect(() => {
     if (isGroupCreated)
       navigate(
-        `/conversation/?type=group&gid=${groupName}&nick=${nickName}&complete=false`
+        `/conversation/?type=group&name=${groupName}&nick=${nickName}&complete=false`
       );
     return () => {
       dispatch(setGroupCreated(false));
+      dispatch(setTempParticipants([]));
+      floatingButtonStateReset()
     };
   }, [isGroupCreated]);
 
@@ -130,7 +126,7 @@ export default function GroupSetup() {
         </div>
       </div>
 
-      {!hasGroupRequestSubmitted && (
+      {!sendCreateReq && (
         <div className="group-setup-container">
           <div className="new-group-name">
             {img && (
@@ -212,7 +208,7 @@ export default function GroupSetup() {
       )}
 
       {/* Loading Spinner */}
-      {hasGroupRequestSubmitted && (
+      {sendCreateReq && (
         <div
           style={{
             display: "flex",

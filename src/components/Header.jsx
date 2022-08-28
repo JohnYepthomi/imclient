@@ -33,7 +33,7 @@ export default function Header() {
     dispatch(setCurrentPage(pageName));
   }, [location]);
 
-  let options = ["new group", "logout"];
+  let menuOptions = ["new group", "logout"];
 
   return (
     <div className="main-header" onClick={handleContainerClick}>
@@ -100,7 +100,7 @@ export default function Header() {
         </div>
       </div>
 
-      {showMore && <Menu className="more-button" options={options} />}
+      {showMore && <Menu className="more-button" options={menuOptions} />}
     </div>
   );
 }

@@ -6,12 +6,11 @@ import MessageHeader from "../../../components/MessageHeader";
 import { RemoveReactionModal } from "./../RemoveReactionModal";
 import GroupMessageView from "../../../components/GroupMessageView";
 
-export default function GroupMessages({ gid, nick }) {
+export default function GroupMessages({ groupName, nick }) {
   const [scroll, setScroll] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [reactionInfo, setReactionInfo] = useState();
-  const groupJid = gid + "@conference.localhost/" + nick;
-  const groupName = gid;
+  const groupJid = groupName + "@conference.localhost/" + nick;
   const { StanzaService } = container;
 
   async function sendInvites() {
@@ -21,7 +20,12 @@ export default function GroupMessages({ gid, nick }) {
   return (
     <div
       className="group-message-container"
-      style={{ position: "absolute", width: "100%", top: 0, zIndex: 9999 }}
+      style={{ 
+        position: "absolute",
+        width: "100%",
+        top: 0,
+        zIndex: 9999
+      }}
     >
       <MessageHeader type="groupChat" senderId={groupJid} />
       <GroupMessageView
@@ -42,6 +46,10 @@ export default function GroupMessages({ gid, nick }) {
         }}
       >
         <button
+          onClick={() => {
+            sendInvites();
+          }}
+
           style={{
             outline: "none",
             color: "white",
@@ -54,9 +62,6 @@ export default function GroupMessages({ gid, nick }) {
             border: "1px solid darkseagreen",
             backgroundColor: "#41784a",
             cursor: "pointer",
-          }}
-          onClick={() => {
-            sendInvites();
           }}
         >
           Invite Participants

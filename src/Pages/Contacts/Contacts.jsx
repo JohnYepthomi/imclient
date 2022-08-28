@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { setContactSelected } from "../../slices/groupSetupSlice";
-import { setTempParticipants } from "../../slices/messageSlice";
+import { setTempParticipants } from "../../dist/slices/messageSlice";
 import { useSelector, useDispatch } from "react-redux";
 import "./Contacts.css";
 

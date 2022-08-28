@@ -6,17 +6,11 @@ import useLongPress from "../hooks/long.press";
 import Reactions from "./Reactions";
 import EmojiSelector from "./EmojiSelector";
 
-export default function GroupMessageView({
-  groupName,
-  setShowModal,
-  setReactionInfo,
-  scrollObject,
-}) {
+export default function GroupMessageView({ groupName, setShowModal, setReactionInfo, scrollObject, }) {
   const scrollRef = useRef();
-
   const groupMessages = useSelector((state) =>
     state.messages.groupMessages.find(
-      (groupmsgs) => Object.keys(groupmsgs)[0] === groupName
+      (groupmsgs) => ((Object.keys(groupmsgs)[0] === groupName))
     )
   );
   const groupParticipants = useSelector((state) =>
@@ -30,7 +24,6 @@ export default function GroupMessageView({
   async function handleChatLongPress() {
     if (this.target.className === "self" || this.target.className === "from") {
       let chat_el = this.target;
-      console.log("handleChatLongPress: ", this.target.previousSibling);
       chat_el.firstChild.style.display = "flex";
     }
   }
@@ -50,36 +43,35 @@ export default function GroupMessageView({
       document.querySelector(".emoji-container").style.display = "none";
     }
     scrollToLastMessage();
-    console.log("group conversation useEffect");
   }, [groupMessages]);
 
   return (
     <div className="message-view-container" ref={scrollRef}>
       {groupMessages &&
         groupMessages[groupName].map((msg, index) => {
-          return (
-            <React.Fragment key={index}>
-              <div
-                className={msg.from === "self" ? "self" : "from"}
-                data-reaction={
-                  msg.reactions && msg.reactions.length > 0 ? true : false
-                }
-                {...chatLongPressHook}
-              >
-                {/* <EmojiSelector senderjid={groupName} message={msg} /> */}
+            return (
+              <React.Fragment key={index}>
+                <div
+                  className={msg.from === "self" ? "self" : "from"}
+                  data-reaction={
+                    msg.reactions && msg.reactions.length > 0 ? true : false
+                  }
+                  {...chatLongPressHook}
+                >
+                  {/* <EmojiSelector senderjid={groupName} message={msg} /> */}
 
-                <div className="chat">{msg.body}</div>
+                  <div className="chat">{msg.body}</div>
 
-                <Ticks message={msg} />
+                  <Ticks message={msg} />
 
-                <Reactions
-                  setShowModal={setShowModal}
-                  setReactionInfo={setReactionInfo}
-                  message={msg}
-                />
-              </div>
-            </React.Fragment>
-          );
+                  <Reactions
+                    setShowModal={setShowModal}
+                    setReactionInfo={setReactionInfo}
+                    message={msg}
+                  />
+                </div>
+              </React.Fragment>
+            );
         })}
     </div>
   );

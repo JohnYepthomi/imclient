@@ -1,6 +1,6 @@
 export default class ConnectionService {
   static status = "offline";
-
+0
   static attachServices(connection, xmlBuilder, logService) {
     this._xmpp = connection;
     this._xml = xmlBuilder;

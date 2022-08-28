@@ -1,20 +1,19 @@
 import store from "../store/store";
 import container from "./di-container";
-import XepModule from "../stanza.service.modules/xep.mods";
-import SendQueue from "../stanza.service.modules/send.queue";
+import XepModule from "../stanzamodules/xep.mods";
+import SendQueue from "../stanzamodules/send.queue";
 import UserService from "../services/user.service";
 
 //Tsc Compiled
-import StanzaService from "../services/dist/stanza.service";
-import { LogService } from "../services/dist/log.service";
-import DispatcherService from "../services/dist/dispatcher.service";
+import StanzaService from "../dist/services/stanza.service";
+import { LogService } from "../dist/services/log.service";
+import DispatcherService from "../dist/services/dispatcher.service";
+import IncomingStanzaHandler from "../dist/stanzamodules/incoming.stanza.handler";
 
 import ConnectionService from "../services/connection.service";
-import incomingStanzaHandler from "../stanza.service.modules/incoming.stanza.handler";
 import { client, xml } from "@xmpp/client";
 import { setGroupCreated } from "../slices/groupSetupSlice";
 import {
-  newDirectMessage,
   updateLastMessage,
   updateDeliveredMessage,
   updateSentMessage,
@@ -23,7 +22,8 @@ import {
   newGroupMessage,
   updateGroupSentMessage,
   updateLastGroupMessage,
-} from "../slices/messageSlice";
+  newDirectMessage,
+} from "../dist/slices/messageSlice";
 
 export default async function diSetup(connectionInfo) {
   window.xmlBuilder = xml;
@@ -59,11 +59,11 @@ export default async function diSetup(connectionInfo) {
   let dispatcher = new DispatcherService(store, actionsList, logFactory());
 
   /**--------- HANDLES_INCOMING_AND_OUTGOING_STANZAS ---------- */
-  let stanzaService = new StanzaService(
-    xml,
+ let stanzaReceiver = new IncomingStanzaHandler(xml, logFactory(), dispatcher, store);
+ let stanzaService = new StanzaService(
+   xml,
     logFactory(),
     dispatcher,
-    incomingStanzaHandler,
     store
   );
 
@@ -71,14 +71,15 @@ export default async function diSetup(connectionInfo) {
     ConnectionService,
     dispatcher,
     logFactory()
-  );
-  let xepModuleInstance = new XepModule(stanzaService, logFactory());
-
+    );
+    let xepModuleInstance = new XepModule(stanzaService, logFactory());
+    
+  stanzaReceiver.attachMods(sendQueueInstance, xepModuleInstance);
   stanzaService.attachMod(xepModuleInstance, sendQueueInstance);
 
   /**--------- CONNECTION_EVENT_HANDLERS ---------- */
   conn.on("stanza", (stanza) => {
-    stanzaService.acceptStanza(stanza);
+    stanzaReceiver.routeStanza(stanza);
   });
 
   conn.on("status", (status) => {

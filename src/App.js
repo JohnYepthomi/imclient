@@ -8,7 +8,8 @@ import { useEffect } from "react";
 import { PrivateRoute } from "./auth/PrivateRouter";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Login, Messages, Contacts, Status } from "./Pages";
-import MessagesList from "./components/MessagesList";
+import MessagesList from "./Pages/MessagesList/MessagesList";
+
 export default function App() {
   /* release resource*/
   const handleTabClose = async (event) => {

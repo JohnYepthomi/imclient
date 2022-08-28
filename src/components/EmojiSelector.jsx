@@ -14,7 +14,7 @@ export default function EmojiSelector({ senderjid, message }) {
     await StanzaService.sendReaction({
       reactionId,
       reactedby,
-      senderjid,
+      sender: senderjid,
       emoji,
     });
 
